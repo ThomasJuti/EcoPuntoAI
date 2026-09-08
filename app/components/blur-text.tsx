@@ -16,19 +16,12 @@ export function BlurText({ text, className }: BlurTextProps) {
   return (
     <span
       ref={ref}
-      className={className}
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        rowGap: "0.1em",
-      }}
+      className={`flex flex-wrap [row-gap:0.1em] ${className ?? "justify-center"}`}
     >
       {text.split(" ").map((word, i) => (
         <motion.span
           key={`${word}-${i}`}
-          className="motion-blur-in"
-          style={{ display: "inline-block", marginRight: "0.28em" }}
+          className="motion-blur-in mr-[0.28em] inline-block"
           initial={
             reduce ? false : { filter: "blur(10px)", opacity: 0, y: 50 }
           }

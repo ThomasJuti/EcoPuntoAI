@@ -14,7 +14,7 @@ type FadingStillProps = {
 export function FadingStill({
   src,
   alt = "",
-  holdMs = 6000,
+  holdMs = 7000,
   className,
   imgClassName,
 }: FadingStillProps) {
@@ -38,17 +38,16 @@ export function FadingStill({
           key={s}
           src={s}
           alt={alt}
-          loading={i === 0 ? "eager" : "lazy"}
+          loading="eager"
           fetchPriority={i === 0 ? "high" : "auto"}
-          className={`ken-burns pointer-events-none absolute inset-0 h-full w-full object-cover ${imgClassName ?? ""}`}
-          initial={{ opacity: i === 0 ? 1 : 0, scale: 1 }}
-          animate={{
-            opacity: i === index ? 1 : 0,
-            scale: !reduce && i === index ? 1.08 : 1,
-          }}
+          className={`ken-burns pointer-events-none absolute max-w-none object-cover ${imgClassName ?? "inset-0 h-full w-full"}`}
+          initial={{ opacity: i === 0 ? 1 : 0 }}
+          animate={{ opacity: i === index ? 1 : 0 }}
           transition={{
-            opacity: { duration: reduce ? 0 : i === index ? 0.5 : 0.55 },
-            scale: { duration: holdMs / 1000, ease: "linear" },
+            opacity: {
+              duration: reduce ? 0 : 1.6,
+              ease: [0.4, 0, 0.2, 1],
+            },
           }}
         />
       ))}
