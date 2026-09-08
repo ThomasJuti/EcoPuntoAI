@@ -65,13 +65,13 @@ Chain strategy: stacked-to-main
 
 ## Phase 6: Map (PR 6)
 
-- [ ] 5.1 RED: ranking never returns a point that does not accept the waste kind as primary
-- [ ] 5.2 Bogotá bounds + locality geocode in `lib/geo/bogota.ts`
-- [ ] 5.3 Schema `collection_points` + `accepted` types in `supabase/migrations/0003_points.sql`
-- [ ] 5.4 Seed curated Bogotá rows in `data/seed/collection-points.csv` (visor/Ecolecta/EcoCómputo/Pilas/Red Verde)
-- [ ] 5.5 List multiple nearby matching points + recommended in `app/(identif)/puntos/page.tsx`
-- [ ] 5.6 Point card fields + “Cómo llegar” Google Maps URL in `app/components/point-card.tsx`
-- [ ] 5.7 Public category filter including “No sé qué es” on `app/(public)/mapa/page.tsx`
+- [x] 5.1 RED: ranking never returns a point that does not accept the waste kind as primary
+- [x] 5.2 Bogotá bounds + locality geocode in `lib/geo/bogota.ts`
+- [x] 5.3 Schema `collection_points` + `accepted` types in `supabase/migrations/0003_points.sql`
+- [x] 5.4 Seed curated Bogotá rows in `data/seed/collection-points.csv` (visor/Ecolecta/EcoCómputo/Pilas/Red Verde)
+- [x] 5.5 List multiple nearby matching points + recommended in `app/(identif)/puntos/page.tsx`
+- [x] 5.6 Point card fields + “Cómo llegar” Google Maps URL in `app/components/point-card.tsx`
+- [x] 5.7 Public category filter including “No sé qué es” on `app/(public)/mapa/page.tsx`
 
 ## Phase 7: Education, reports, admin (PR 7)
 
