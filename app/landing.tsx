@@ -154,7 +154,7 @@ function Hero() {
         <h1 className="max-w-[13ch] pb-1 font-heading text-6xl font-normal italic leading-[1.05] tracking-[-0.04em] text-petroleum [text-shadow:0_0_28px_#fff,0_0_8px_#fff] md:text-7xl lg:text-[5.25rem]">
           <BlurText
             className="justify-start"
-            text="El cajón de cables no tiene que ser basura"
+            text="Qué es, y a dónde va en Bogotá"
           />
         </h1>
 
