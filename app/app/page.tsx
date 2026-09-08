@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Camera } from "@phosphor-icons/react/dist/ssr";
+import { IdentifyHistory } from "@/app/components/identify-history";
 
 export const metadata: Metadata = {
   title: "Inicio - EcoPunto IA",
@@ -8,31 +9,32 @@ export const metadata: Metadata = {
 
 export default function AppHomePage() {
   return (
-    <main className="flex min-h-[62dvh] flex-col justify-center">
-      <h1 className="max-w-[15ch] pb-1 font-heading text-5xl font-normal italic leading-[1.05] tracking-[-0.03em] text-petroleum md:text-7xl">
-        ¿Qué hago con este aparato?
+    <main>
+      <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
+        Inicio
       </h1>
-      <p className="mt-6 max-w-[46ch] text-lg font-light leading-relaxed text-petroleum/75">
-        Una foto basta: EcoPunto IA identifica tu electrónico, te dice qué
-        hacer con él — riesgos incluidos — y a qué punto de Bogotá llevarlo.
+      <p className="mt-3 max-w-[52ch] text-lg font-light leading-relaxed text-petroleum/70">
+        Una foto identifica tu aparato y te dice a qué punto de Bogotá
+        llevarlo.
       </p>
-      <div className="mt-10">
+      <div className="mt-8">
         <Link
           href="/app/escanear"
-          className="liquid-glass-strong inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-medium text-petroleum transition duration-200 hover:bg-white/50 active:scale-[0.97]"
+          className="liquid-glass-strong inline-flex items-center gap-2.5 rounded-full px-7 py-4 text-base font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/40 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
         >
           <Camera size={20} weight="fill" />
-          Identificar dispositivo
+          Identificar
         </Link>
       </div>
-      <p className="mt-20 text-sm text-petroleum/50">
-        <Link
-          href="/"
-          className="underline decoration-petroleum/25 underline-offset-4 transition duration-100 ease-[var(--ease-out)] hover:text-petroleum"
-        >
-          Volver a la portada
-        </Link>
-      </p>
+
+      <section className="mt-20 md:mt-24">
+        <h2 className="font-heading text-2xl font-normal italic leading-tight tracking-[-0.01em] text-petroleum md:text-3xl">
+          Historial
+        </h2>
+        <div className="mt-5">
+          <IdentifyHistory />
+        </div>
+      </section>
     </main>
   );
 }

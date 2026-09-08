@@ -68,6 +68,13 @@ export function Result({ kind, confidence, path }: Props) {
   function onCorrect(event: React.ChangeEvent<HTMLSelectElement>) {
     const next = event.target.value;
     if (!isWasteKind(next)) return;
+    if (path) {
+      void fetch("/api/identifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path, kind: next }),
+      });
+    }
     const params = new URLSearchParams();
     params.set("kind", next);
     if (confidence) params.set("confidence", confidence);

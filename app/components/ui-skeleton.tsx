@@ -104,6 +104,30 @@ export function LearnSkeleton() {
   );
 }
 
+/** Inicio: CTA «Identificar» + sección Historial con 3 filas. */
+export function HomeSkeleton() {
+  return (
+    <div>
+      <Pulse className="mt-8 h-14 w-44" />
+      <Pulse className="mt-20 h-8 w-36 md:mt-24" />
+      <ul className="mt-5 space-y-3">
+        {Array.from({ length: 3 }, (_, i) => (
+          <li
+            key={i}
+            className="liquid-glass flex items-center gap-4 rounded-3xl p-4 md:p-5"
+          >
+            <div className="h-11 w-11 shrink-0 animate-pulse rounded-2xl bg-petroleum/10 motion-reduce:animate-none" />
+            <div className="min-w-0 flex-1 space-y-2">
+              <Pulse className="h-5 w-40 max-w-full" />
+              <Pulse className="h-3.5 w-56 max-w-full" />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 /** Perfil: columna centrada con icono, encabezado y tarjeta de sesión. */
 export function ProfileSkeleton() {
   return (

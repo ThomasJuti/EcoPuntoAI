@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Camera, ImageSquare, SpinnerGap, WarningCircle } from "@phosphor-icons/react";
+import { isWasteKind } from "@/lib/catalog/kinds";
 
 type Status = "idle" | "uploading" | "identifying" | "error";
 
@@ -46,8 +47,9 @@ export function Capture() {
         path: string;
       };
 
+      const kind = isWasteKind(result.wasteKind) ? result.wasteKind : "unknown";
       const params = new URLSearchParams({
-        kind: result.wasteKind,
+        kind,
         confidence: String(result.confidence),
         path: result.path,
       });

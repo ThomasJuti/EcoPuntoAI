@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { isWasteKind } from "@/lib/catalog/kinds";
+import { insertIdentification } from "@/lib/identify/history";
 import { createClient, getUser } from "@/lib/supabase/server";
 import { assertAuthenticated, HttpError } from "@/lib/storage/guard";
 import { identifyFromBytes } from "@/lib/vision/identify";
@@ -30,5 +32,12 @@ export async function POST(request: Request) {
     await data.arrayBuffer(),
     data.type || "image/jpeg",
   );
-  return NextResponse.json({ ...result, path });
+  const kind = isWasteKind(result.wasteKind) ? result.wasteKind : "unknown";
+  // ponytail: identify still returns if the history table is not migrated yet
+  await insertIdentification(supabase, userId, {
+    path,
+    kind,
+    confidence: result.confidence,
+  });
+  return NextResponse.json({ ...result, wasteKind: kind, path });
 }
