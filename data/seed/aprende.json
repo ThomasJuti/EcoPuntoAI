@@ -1,0 +1,53 @@
+{
+  "sections": [
+    {
+      "id": "raee",
+      "title": "Qué son los RAEE",
+      "lede": "Residuos de aparatos eléctricos y electrónicos.",
+      "paragraphs": [
+        "Si usa corriente o pila, al final de su vida es un RAEE: el celular, el cargador, el portátil, la tele, la impresora, los audífonos.",
+        "No es basura común. Adentro hay metales, plásticos y a veces sustancias que no deben mezclarse con el aseo del hogar."
+      ],
+      "items": []
+    },
+    {
+      "id": "trash",
+      "title": "No van a la caneca",
+      "lede": "En Bogotá los RAEE se entregan en puntos posconsumo.",
+      "paragraphs": [
+        "Tirarlos al aseo ordinario contamina suelo y agua. Tampoco van al contenedor de reciclaje de la esquina: ese circuito no está hecho para electrónicos."
+      ],
+      "items": [
+        { "text": "Identifica el aparato en la app o elige la categoría a mano.", "tone": "default" },
+        { "text": "Sigue la ficha: qué se puede reusar, donar o reciclar.", "tone": "default" },
+        { "text": "Llévalo a un punto que reciba ese tipo de residuo.", "tone": "default" }
+      ]
+    },
+    {
+      "id": "batteries",
+      "title": "Pilas y baterías",
+      "lede": "Van a puntos Pilas, no a Ecolecta.",
+      "paragraphs": [
+        "Las pilas de botón, las recargables y las baterías de portátil o celular se recogen aparte. Mezclarlas con computadores o cables no es el circuito correcto."
+      ],
+      "items": [
+        { "text": "No las tires a la basura ni al inodoro.", "tone": "hazard" },
+        { "text": "No las pinches, no las abras y no las eches al fuego.", "tone": "hazard" },
+        { "text": "Si está hinchada, aísala y llévala sin recargarla.", "tone": "hazard" }
+      ]
+    },
+    {
+      "id": "damaged",
+      "title": "Aparatos dañados",
+      "lede": "Hinchados, mojados o con fuga no se donan ni se siguen usando.",
+      "paragraphs": [
+        "Un equipo que se mojó o con batería hinchada puede incendiarse si lo cargas o lo pinchas. La ficha de la app cambia el consejo cuando marcas esas condiciones."
+      ],
+      "items": [
+        { "text": "No lo uses, no lo dones y no lo recargues.", "tone": "hazard" },
+        { "text": "Guárdalo aislado, lejos de fuentes de calor.", "tone": "hazard" },
+        { "text": "Llévalo a un punto que reciba ese residuo; no lo dejes en la calle.", "tone": "default" }
+      ]
+    }
+  ]
+}
