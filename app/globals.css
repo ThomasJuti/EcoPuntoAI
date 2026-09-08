@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: var(--font-instrument), Georgia, serif;
+  --font-body: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+
+  /* Paleta que aun usa el placeholder de /app */
+  --color-pine-600: #2f7050;
+  --color-pine-950: #0e2119;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white font-body text-black antialiased;
+  }
+
+  ::selection {
+    @apply bg-black text-white;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+/* Liquid glass: variante sutil (navbar, pills, tarjetas) */
+.liquid-glass,
+.liquid-glass-strong {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.38);
+  background-blend-mode: luminosity;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.7),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.liquid-glass-strong {
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
+  background: rgba(255, 255, 255, 0.52);
+  box-shadow:
+    4px 4px 16px rgba(0, 0, 0, 0.06),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+/* Borde de gradiente via pseudo-elemento enmascarado */
+.liquid-glass::before,
+.liquid-glass-strong::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.25) 20%,
+    rgba(0, 0, 0, 0.08) 40%,
+    rgba(0, 0, 0, 0.08) 60%,
+    rgba(255, 255, 255, 0.25) 80%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.liquid-glass-strong::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.35) 20%,
+    rgba(0, 0, 0, 0.1) 40%,
+    rgba(0, 0, 0, 0.1) 60%,
+    rgba(255, 255, 255, 0.35) 80%,
+    rgba(255, 255, 255, 0.95) 100%
+  );
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-glass,
+  .liquid-glass-strong {
+    background: #f4f4f4;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Los estilos inline de framer-motion ganan sin el !important: fuerza estado visible */
+@media (prefers-reduced-motion: reduce) {
+  .motion-blur-in,
+  .ken-burns {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
