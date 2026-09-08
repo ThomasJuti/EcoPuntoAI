@@ -20,13 +20,17 @@ export function AppNav() {
   const perfilActive = isActive(pathname, "/app/perfil", false);
 
   return (
-    <header className="fixed inset-x-0 top-4 z-50 grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:gap-3 sm:px-6 lg:px-16">
+    <header className="sticky top-0 z-50 grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-2 bg-gradient-to-b from-white/80 to-transparent px-4 pt-4 sm:gap-3 sm:px-6 lg:px-16">
       <Link
-        href="/app"
-        aria-label="EcoPunto IA - inicio de la app"
-        className="liquid-glass grid h-11 w-11 shrink-0 place-items-center justify-self-start rounded-full text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/40 active:scale-[0.97] sm:h-12 sm:w-12"
+        href="/?landing"
+        aria-label="EcoPunto IA - sitio"
+        className="liquid-glass grid h-11 shrink-0 place-items-center justify-self-start rounded-full px-2.5 text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/40 active:scale-[0.97] sm:h-12 sm:px-3"
       >
-        <span className="font-heading text-2xl italic">e</span>
+        <img
+          src="/images/logo-ecopunto-ia.png"
+          alt=""
+          className="h-4 w-auto sm:h-6"
+        />
       </Link>
 
       <nav

@@ -31,7 +31,7 @@ export default async function AppHomePage() {
         </div>
       )}
 
-      <section className="mt-20 md:mt-24">
+      <section className="mt-5 md:mt-6">
         <h2 className="font-heading text-2xl font-normal italic leading-tight tracking-[-0.01em] text-petroleum md:text-3xl">
           Historial
         </h2>
