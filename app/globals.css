@@ -9,6 +9,9 @@
   --color-petroleum: #0a3d4a;
   --color-soft: #e5e7eb;
   --color-grouped: #f2f2f7;
+  --color-grey: #6b7280;
+  --color-warning: #c2410c;
+  --color-danger: #b91c1c;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -49,7 +52,7 @@
   }
 }
 
-body::after {
+.grain::after {
   content: "";
   pointer-events: none;
   position: fixed;

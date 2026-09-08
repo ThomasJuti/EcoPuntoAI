@@ -279,7 +279,7 @@ function Capabilities() {
 
 export function Landing() {
   return (
-    <main className="bg-white text-petroleum">
+    <main className="grain bg-white text-petroleum">
       <a
         href="#contenido"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-full focus:bg-white focus:px-4 focus:py-2"
