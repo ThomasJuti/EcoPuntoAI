@@ -3,6 +3,7 @@ import { fail } from "@/lib/api/fail";
 import { requireAdmin } from "@/lib/auth/admin";
 import { parsePointPatch } from "@/lib/catalog/point-input";
 import { pointPatchToRow } from "@/lib/catalog/point-row";
+import { bustPointsCache } from "@/lib/catalog/cache";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -23,6 +24,7 @@ export async function PATCH(request: Request, { params }: Params) {
     if (!data) {
       return NextResponse.json({ error: "Punto no encontrado" }, { status: 404 });
     }
+    bustPointsCache();
     return NextResponse.json({ ok: true });
   } catch (err) {
     return fail(err);
@@ -46,6 +48,7 @@ export async function DELETE(_request: Request, { params }: Params) {
     if (!data) {
       return NextResponse.json({ error: "Punto no encontrado" }, { status: 404 });
     }
+    bustPointsCache();
     return NextResponse.json({ ok: true });
   } catch (err) {
     return fail(err);

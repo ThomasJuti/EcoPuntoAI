@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   MapPin,
   PencilSimple,
@@ -52,7 +52,6 @@ function formFromPoint(point: CollectionPoint): FormState {
 }
 
 type LoadState =
-  | { type: "loading" }
   | { type: "ready"; points: CollectionPoint[]; warning?: string }
   | { type: "forbidden" }
   | { type: "error"; message: string };
@@ -65,47 +64,23 @@ const btnBase =
   "inline-flex items-center gap-1.5 rounded-full text-sm font-medium transition duration-100 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100";
 const spinner = "animate-spin motion-reduce:animate-none";
 
-export function PointsAdmin() {
-  const [state, setState] = useState<LoadState>({ type: "loading" });
+export function PointsAdmin({
+  initialPoints,
+  warning,
+}: {
+  initialPoints: CollectionPoint[];
+  warning?: string;
+}) {
+  const [state, setState] = useState<LoadState>({
+    type: "ready",
+    points: initialPoints,
+    warning,
+  });
   const [editing, setEditing] = useState<string | "new" | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/admin/points", { signal: controller.signal })
-      .then(async (res) => {
-        if (res.status === 403 || res.status === 401) {
-          setState({ type: "forbidden" });
-          return null;
-        }
-        const json = (await res.json()) as {
-          points?: CollectionPoint[];
-          error?: string;
-          warning?: string;
-        };
-        if (!res.ok) {
-          throw new Error(json.error ?? "No pudimos cargar los puntos.");
-        }
-        setState({
-          type: "ready",
-          points: json.points ?? [],
-          warning: json.warning,
-        });
-        return null;
-      })
-      .catch((err: unknown) => {
-        if (err instanceof DOMException && err.name === "AbortError") return;
-        setState({
-          type: "error",
-          message:
-            err instanceof Error ? err.message : "No pudimos cargar los puntos.",
-        });
-      });
-    return () => controller.abort();
-  }, []);
 
   function startCreate() {
     setForm(EMPTY_FORM);
@@ -248,15 +223,6 @@ export function PointsAdmin() {
     }
   }
 
-  if (state.type === "loading") {
-    return (
-      <p role="status" className="mt-10 flex items-center gap-2 text-sm text-petroleum/60">
-        <SpinnerGap size={16} weight="bold" className={spinner} />
-        Cargando puntos…
-      </p>
-    );
-  }
-
   if (state.type === "forbidden") {
     return (
       <div className="liquid-glass mt-10 max-w-xl rounded-3xl p-6">
@@ -273,16 +239,16 @@ export function PointsAdmin() {
     );
   }
 
-  const { points, warning } = state;
+  const { points, warning: notice } = state;
 
   return (
     <div className="mt-10">
-      {warning && (
+      {notice && (
         <p
           role="status"
           className="mb-6 max-w-2xl text-sm leading-relaxed text-petroleum/70"
         >
-          {warning}
+          {notice}
         </p>
       )}
       {editing === null && (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Crosshair,
   MagnifyingGlass,
@@ -8,20 +8,14 @@ import {
   SpinnerGap,
 } from "@phosphor-icons/react";
 import { WASTE_KINDS, labelFor, type WasteKind } from "@/lib/catalog/kinds";
-import type { RankedPoint } from "@/lib/catalog/ranking";
+import { listPoints, type PointsOrigin } from "@/lib/catalog/list";
+import type { CollectionPoint } from "@/lib/catalog/ranking";
 import { PointCard } from "./point-card";
 
-export type PointsOrigin =
-  | { type: "gps"; lat: number; lng: number }
-  | { type: "locality"; locality: string }
-  | { type: "default" };
-
-type ApiOk = {
-  originLabel: string;
-  points: RankedPoint[];
-};
+export type { PointsOrigin };
 
 type Props = {
+  catalog: CollectionPoint[];
   initialKind?: WasteKind;
   initialOrigin?: PointsOrigin;
 };
@@ -33,6 +27,7 @@ const spinner =
   "animate-spin motion-reduce:animate-none";
 
 export function PointsBrowser({
+  catalog,
   initialKind = "unknown",
   initialOrigin = { type: "default" },
 }: Props) {
@@ -41,48 +36,13 @@ export function PointsBrowser({
   const [localityInput, setLocalityInput] = useState(
     initialOrigin.type === "locality" ? initialOrigin.locality : "",
   );
-  const [data, setData] = useState<ApiOk | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
   const [gpsError, setGpsError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const params = new URLSearchParams({ kind });
-    if (origin.type === "gps") {
-      params.set("lat", String(origin.lat));
-      params.set("lng", String(origin.lng));
-    } else if (origin.type === "locality") {
-      params.set("locality", origin.locality);
-    }
-
-    setLoading(true);
-    setError(null);
-
-    fetch(`/api/points?${params.toString()}`, { signal: controller.signal })
-      .then(async (res) => {
-        const json = (await res.json()) as Partial<ApiOk> & { error?: string };
-        if (!res.ok) {
-          throw new Error(json.error ?? "No pudimos cargar los puntos.");
-        }
-        return json as ApiOk;
-      })
-      .then((json) => {
-        setData(json);
-        setLoading(false);
-      })
-      .catch((err: unknown) => {
-        if (err instanceof DOMException && err.name === "AbortError") return;
-        setData(null);
-        setError(
-          err instanceof Error ? err.message : "No pudimos cargar los puntos.",
-        );
-        setLoading(false);
-      });
-
-    return () => controller.abort();
-  }, [kind, origin]);
+  const listed = useMemo(
+    () => listPoints(catalog, kind, origin),
+    [catalog, kind, origin],
+  );
 
   function useMyLocation() {
     setGpsError(null);
@@ -102,7 +62,6 @@ export function PointsBrowser({
         });
       },
       () => {
-        // Denegada o sin señal: el campo de localidad sigue funcionando
         setLocating(false);
         setGpsError(
           "No pudimos usar tu ubicación. Escribe tu localidad, por ejemplo Kennedy.",
@@ -120,6 +79,8 @@ export function PointsBrowser({
   }
 
   const gpsActive = origin.type === "gps";
+  const error = "error" in listed ? listed.error : null;
+  const data = "error" in listed ? null : listed;
 
   return (
     <div className="mt-10">
@@ -202,14 +163,7 @@ export function PointsBrowser({
       )}
 
       <div className="mt-8">
-        {loading && (
-          <p role="status" className="flex items-center gap-2 text-sm text-petroleum/60">
-            <SpinnerGap size={16} weight="bold" className={spinner} />
-            Buscando puntos…
-          </p>
-        )}
-
-        {!loading && error && (
+        {error && (
           <div className="liquid-glass max-w-xl rounded-3xl p-6">
             <p className="text-sm font-medium text-petroleum">{error}</p>
             <p className="mt-1.5 text-sm text-petroleum/60">
@@ -218,7 +172,7 @@ export function PointsBrowser({
           </div>
         )}
 
-        {!loading && !error && data && (
+        {data && (
           <>
             <p className="text-sm text-petroleum/60">
               {data.points.length === 0

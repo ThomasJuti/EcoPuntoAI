@@ -18,6 +18,17 @@ export function isReportReason(value: string): value is ReportReason {
   return (REPORT_REASONS as readonly string[]).includes(value);
 }
 
+export type PointReport = {
+  id: string;
+  point_id: string;
+  point_name: string;
+  reason: ReportReason;
+  comment: string | null;
+  status: string;
+  created_at: string;
+  resolved_at: string | null;
+};
+
 export type ReportInput = {
   pointId: string;
   pointName: string;

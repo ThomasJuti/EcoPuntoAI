@@ -6,6 +6,21 @@ export async function updateSession(request: NextRequest) {
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !key) return NextResponse.next({ request });
 
+  const path = request.nextUrl.pathname;
+  const purpose = request.headers.get("purpose");
+  const prefetch =
+    request.headers.get("next-router-prefetch") === "1" ||
+    purpose === "prefetch";
+  const gated =
+    path.startsWith("/app/escanear") ||
+    path.startsWith("/app/resultado") ||
+    path.startsWith("/app/perfil") ||
+    path.startsWith("/app/admin") ||
+    path.startsWith("/auth") ||
+    (path.startsWith("/api/") && path !== "/api/points");
+  const skipRefresh = prefetch || (request.method === "GET" && !gated);
+  if (skipRefresh) return NextResponse.next({ request });
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(url, key, {

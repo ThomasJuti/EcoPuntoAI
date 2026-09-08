@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -11,22 +11,11 @@ import {
 } from "@phosphor-icons/react";
 import {
   REPORT_REASON_LABELS,
-  type ReportReason,
+  type PointReport,
 } from "@/lib/catalog/reports";
 
-type Report = {
-  id: string;
-  point_id: string;
-  point_name: string;
-  reason: ReportReason;
-  comment: string | null;
-  status: string;
-  created_at: string;
-};
-
 type LoadState =
-  | { type: "loading" }
-  | { type: "ready"; reports: Report[]; warning?: string }
+  | { type: "ready"; reports: PointReport[]; warning?: string }
   | { type: "forbidden" }
   | { type: "error"; message: string };
 
@@ -40,45 +29,19 @@ const btnBase =
   "inline-flex items-center gap-1.5 rounded-full text-sm font-medium transition duration-100 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100";
 const spinner = "animate-spin motion-reduce:animate-none";
 
-export function ReportsAdmin() {
-  const [state, setState] = useState<LoadState>({ type: "loading" });
+export function ReportsAdmin({
+  initialReports,
+  warning,
+}: {
+  initialReports: PointReport[];
+  warning?: string;
+}) {
+  const [state, setState] = useState<LoadState>({
+    type: "ready",
+    reports: initialReports,
+    warning,
+  });
   const [busyId, setBusyId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/admin/reports", { signal: controller.signal })
-      .then(async (res) => {
-        if (res.status === 403 || res.status === 401) {
-          setState({ type: "forbidden" });
-          return null;
-        }
-        const json = (await res.json()) as {
-          reports?: Report[];
-          error?: string;
-          warning?: string;
-        };
-        if (!res.ok) {
-          throw new Error(json.error ?? "No pudimos cargar los reportes.");
-        }
-        setState({
-          type: "ready",
-          reports: json.reports ?? [],
-          warning: json.warning,
-        });
-        return null;
-      })
-      .catch((err: unknown) => {
-        if (err instanceof DOMException && err.name === "AbortError") return;
-        setState({
-          type: "error",
-          message:
-            err instanceof Error
-              ? err.message
-              : "No pudimos cargar los reportes.",
-        });
-      });
-    return () => controller.abort();
-  }, []);
 
   async function resolve(id: string, status: "resolved" | "dismissed") {
     if (state.type !== "ready") return;
@@ -108,15 +71,6 @@ export function ReportsAdmin() {
     }
   }
 
-  if (state.type === "loading") {
-    return (
-      <p role="status" className="mt-10 flex items-center gap-2 text-sm text-petroleum/60">
-        <SpinnerGap size={16} weight="bold" className={spinner} />
-        Cargando reportes…
-      </p>
-    );
-  }
-
   if (state.type === "forbidden") {
     return (
       <div className="liquid-glass mt-10 max-w-xl rounded-3xl p-6">
@@ -133,7 +87,7 @@ export function ReportsAdmin() {
     );
   }
 
-  const { reports, warning } = state;
+  const { reports, warning: notice } = state;
 
   if (reports.length === 0) {
     return (
@@ -142,9 +96,9 @@ export function ReportsAdmin() {
         <p className="mt-3 text-base font-medium text-petroleum">
           No hay reportes abiertos.
         </p>
-        {warning && (
+        {notice && (
           <p className="mt-3 text-sm leading-relaxed text-petroleum/70">
-            {warning}
+            {notice}
           </p>
         )}
       </div>

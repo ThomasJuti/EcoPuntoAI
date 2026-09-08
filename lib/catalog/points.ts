@@ -1,5 +1,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { cache } from "react";
+import { createClient } from "@supabase/supabase-js";
+import { unstable_cache } from "next/cache";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { isWasteKind, type WasteKind } from "@/lib/catalog/kinds";
 import { pointFromRow, pointToRow, type PointRow } from "@/lib/catalog/point-row";
@@ -47,36 +50,40 @@ export function loadSeedPoints(): CollectionPoint[] {
   return pointsFromCsv(raw);
 }
 
-export async function loadPoints(): Promise<CollectionPoint[]> {
-  try {
-    const { createClient } = await import("@/lib/supabase/server");
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("collection_points")
-      .select(
-        "id,name,address,lat,lng,locality,hours,contact,accepted,is_active,last_verified_at",
-      )
-      .eq("is_active", true);
-    if (!error && data && data.length > 0) {
-      return data.map((row) =>
-        pointFromRow({ ...row, accepted: row.accepted as string[] }),
-      );
-    }
-  } catch {
-    // ponytail: CSV until the cloud table is seeded
-  }
-  return loadSeedPoints();
-}
-
 const POINT_COLS =
   "id,name,address,lat,lng,locality,hours,contact,accepted,is_active,last_verified_at";
-
-export const POINTS_MIGRATION_HINT =
-  "Aplica supabase/migrations/0003_points.sql y 0004_reports.sql en el SQL editor de Supabase para poder editar.";
 
 function rowsFrom(data: PointRow[] | null): CollectionPoint[] {
   return (data ?? []).map(pointFromRow);
 }
+
+export const POINTS_CACHE_TAG = "collection-points";
+
+async function fetchActivePoints(): Promise<CollectionPoint[]> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (url && key) {
+    const supabase = createClient(url, key);
+    const { data, error } = await supabase
+      .from("collection_points")
+      .select(POINT_COLS)
+      .eq("is_active", true);
+    if (!error && data && data.length > 0) {
+      return rowsFrom(data as PointRow[]);
+    }
+  }
+  return loadSeedPoints();
+}
+
+export const loadPoints = cache(
+  unstable_cache(fetchActivePoints, [POINTS_CACHE_TAG], {
+    revalidate: 60,
+    tags: [POINTS_CACHE_TAG],
+  }),
+);
+
+export const POINTS_MIGRATION_HINT =
+  "Aplica supabase/migrations/0003_points.sql y 0004_reports.sql en el SQL editor de Supabase para poder editar.";
 
 export async function loadDbPoints(
   supabase: SupabaseClient,

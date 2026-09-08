@@ -1,13 +1,31 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
-import {
-  PointsBrowser,
-  type PointsOrigin,
-} from "@/app/components/points-browser";
-import { isWasteKind, labelFor, type WasteKind } from "@/lib/catalog/kinds";
+import { PointsBrowser } from "@/app/components/points-browser";
+import { PointsBrowserSkeleton } from "@/app/components/ui-skeleton";
+import { kindFromParam, originFromParams, type PointsOrigin } from "@/lib/catalog/list";
+import { loadPoints } from "@/lib/catalog/points";
+import { labelFor, type WasteKind } from "@/lib/catalog/kinds";
 
 export const metadata: Metadata = {
   title: "¿Dónde lo llevo? - EcoPunto IA",
 };
+
+async function PuntosCatalog({
+  kind,
+  initialOrigin,
+}: {
+  kind: WasteKind;
+  initialOrigin: PointsOrigin;
+}) {
+  const catalog = await loadPoints();
+  return (
+    <PointsBrowser
+      catalog={catalog}
+      initialKind={kind}
+      initialOrigin={initialOrigin}
+    />
+  );
+}
 
 export default async function PuntosPage({
   searchParams,
@@ -18,19 +36,12 @@ export default async function PuntosPage({
   const first = (value: string | string[] | undefined) =>
     Array.isArray(value) ? value[0] : value;
 
-  const rawKind = first(params.kind);
-  const kind: WasteKind = rawKind && isWasteKind(rawKind) ? rawKind : "unknown";
-
-  const lat = Number(first(params.lat));
-  const lng = Number(first(params.lng));
-  const locality = first(params.locality)?.trim();
-
-  const initialOrigin: PointsOrigin =
-    Number.isFinite(lat) && Number.isFinite(lng)
-      ? { type: "gps", lat, lng }
-      : locality
-        ? { type: "locality", locality }
-        : { type: "default" };
+  const kind = kindFromParam(first(params.kind));
+  const initialOrigin = originFromParams({
+    lat: first(params.lat),
+    lng: first(params.lng),
+    locality: first(params.locality),
+  });
 
   return (
     <main>
@@ -42,7 +53,9 @@ export default async function PuntosPage({
           ? "Todos los puntos activos de Bogotá. Afina la categoría si ya sabes qué es."
           : `Puntos de Bogotá que reciben «${labelFor(kind)}». Busca desde tu ubicación o tu localidad.`}
       </p>
-      <PointsBrowser initialKind={kind} initialOrigin={initialOrigin} />
+      <Suspense fallback={<PointsBrowserSkeleton />}>
+        <PuntosCatalog kind={kind} initialOrigin={initialOrigin} />
+      </Suspense>
     </main>
   );
 }

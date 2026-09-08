@@ -3,15 +3,14 @@ import Link from "next/link";
 import { Flag, MapPin, SignOut, User } from "@phosphor-icons/react/dist/ssr";
 import { signOut } from "@/app/auth/actions";
 import { SignInForm } from "@/app/components/sign-in-form";
-import { getIsAdmin } from "@/lib/auth/admin";
-import { getUser } from "@/lib/supabase/server";
+import { getProfile } from "@/lib/auth/admin";
 
 export const metadata: Metadata = {
   title: "Perfil - EcoPunto IA",
 };
 
 export default async function PerfilPage() {
-  const user = await getUser();
+  const { user, isAdmin } = await getProfile();
 
   if (!user) {
     return (
@@ -34,7 +33,6 @@ export default async function PerfilPage() {
 
   const email = user.email ?? "";
   const initial = (email || "e").charAt(0).toUpperCase();
-  const isAdmin = await getIsAdmin();
 
   return (
     <main className="flex min-h-[62dvh] flex-col justify-center">

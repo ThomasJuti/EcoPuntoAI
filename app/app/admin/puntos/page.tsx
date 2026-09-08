@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ShieldWarning, User } from "@phosphor-icons/react/dist/ssr";
 import { SignInForm } from "@/app/components/sign-in-form";
-import { getIsAdmin } from "@/lib/auth/admin";
-import { getUser } from "@/lib/supabase/server";
+import { getProfile } from "@/lib/auth/admin";
+import { createClient } from "@/lib/supabase/server";
+import { loadAdminPoints } from "@/lib/catalog/points";
 import { PointsAdmin } from "./points-admin";
 
 export const metadata: Metadata = {
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPuntosPage() {
-  const user = await getUser();
+  const { user, isAdmin } = await getProfile();
 
   if (!user) {
     return (
@@ -31,8 +32,6 @@ export default async function AdminPuntosPage() {
       </main>
     );
   }
-
-  const isAdmin = await getIsAdmin();
 
   if (!isAdmin) {
     return (
@@ -58,6 +57,8 @@ export default async function AdminPuntosPage() {
     );
   }
 
+  const payload = await loadAdminPoints(await createClient());
+
   return (
     <main>
       <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
@@ -67,7 +68,7 @@ export default async function AdminPuntosPage() {
         Crea, edita y desactiva puntos de recolección. Los puntos desactivados
         no aparecen en el mapa.
       </p>
-      <PointsAdmin />
+      <PointsAdmin initialPoints={payload.points} warning={payload.warning} />
     </main>
   );
 }

@@ -1,7 +1,8 @@
+import { cache } from "react";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-export async function createClient() {
+export const createClient = cache(async () => {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !key) {
@@ -26,9 +27,9 @@ export async function createClient() {
       },
     },
   });
-}
+});
 
-export async function getUser() {
+export const getUser = cache(async () => {
   try {
     const supabase = await createClient();
     const {
@@ -38,4 +39,4 @@ export async function getUser() {
   } catch {
     return null;
   }
-}
+});

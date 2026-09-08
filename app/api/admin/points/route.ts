@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/auth/admin";
 import { parsePointCreate } from "@/lib/catalog/point-input";
 import { pointToRow } from "@/lib/catalog/point-row";
 import { loadAdminPoints } from "@/lib/catalog/points";
+import { bustPointsCache } from "@/lib/catalog/cache";
 
 export async function GET() {
   try {
@@ -24,6 +25,7 @@ export async function POST(request: Request) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+    bustPointsCache();
     return NextResponse.json({ point }, { status: 201 });
   } catch (err) {
     return fail(err);

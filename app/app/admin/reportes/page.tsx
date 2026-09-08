@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ShieldWarning, User } from "@phosphor-icons/react/dist/ssr";
 import { SignInForm } from "@/app/components/sign-in-form";
-import { getIsAdmin } from "@/lib/auth/admin";
-import { getUser } from "@/lib/supabase/server";
+import { getProfile } from "@/lib/auth/admin";
+import { createClient } from "@/lib/supabase/server";
+import type { PointReport, ReportReason } from "@/lib/catalog/reports";
+import { isReportReason } from "@/lib/catalog/reports";
 import { ReportsAdmin } from "./reports-admin";
 
 export const metadata: Metadata = {
@@ -11,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminReportesPage() {
-  const user = await getUser();
+  const { user, isAdmin } = await getProfile();
 
   if (!user) {
     return (
@@ -31,8 +33,6 @@ export default async function AdminReportesPage() {
       </main>
     );
   }
-
-  const isAdmin = await getIsAdmin();
 
   if (!isAdmin) {
     return (
@@ -58,6 +58,29 @@ export default async function AdminReportesPage() {
     );
   }
 
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("point_reports")
+    .select("id,point_id,point_name,reason,comment,status,created_at,resolved_at")
+    .eq("status", "open")
+    .order("created_at", { ascending: false });
+
+  const reports: PointReport[] = (data ?? []).flatMap((row) => {
+    if (!isReportReason(row.reason)) return [];
+    return [
+      {
+        id: row.id,
+        point_id: row.point_id,
+        point_name: row.point_name,
+        reason: row.reason as ReportReason,
+        comment: row.comment,
+        status: row.status,
+        created_at: row.created_at,
+        resolved_at: row.resolved_at,
+      },
+    ];
+  });
+
   return (
     <main>
       <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
@@ -67,7 +90,14 @@ export default async function AdminReportesPage() {
         Datos reportados por la gente. Los puntos siguen visibles hasta que el
         equipo los revise.
       </p>
-      <ReportsAdmin />
+      <ReportsAdmin
+        initialReports={reports}
+        warning={
+          error
+            ? "Aplica supabase/migrations/0004_reports.sql en el SQL editor de Supabase."
+            : undefined
+        }
+      />
     </main>
   );
 }

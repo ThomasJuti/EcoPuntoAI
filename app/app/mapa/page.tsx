@@ -1,10 +1,19 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { PointsBrowser } from "@/app/components/points-browser";
-import { isWasteKind, type WasteKind } from "@/lib/catalog/kinds";
+import { PointsBrowserSkeleton } from "@/app/components/ui-skeleton";
+import { kindFromParam } from "@/lib/catalog/list";
+import { loadPoints } from "@/lib/catalog/points";
+import type { WasteKind } from "@/lib/catalog/kinds";
 
 export const metadata: Metadata = {
   title: "Mapa - EcoPunto IA",
 };
+
+async function MapCatalog({ initialKind }: { initialKind: WasteKind }) {
+  const catalog = await loadPoints();
+  return <PointsBrowser catalog={catalog} initialKind={initialKind} />;
+}
 
 export default async function MapaPage({
   searchParams,
@@ -13,7 +22,7 @@ export default async function MapaPage({
 }) {
   const params = await searchParams;
   const raw = Array.isArray(params.kind) ? params.kind[0] : params.kind;
-  const initialKind: WasteKind = raw && isWasteKind(raw) ? raw : "unknown";
+  const initialKind: WasteKind = kindFromParam(raw);
 
   return (
     <main>
@@ -24,7 +33,9 @@ export default async function MapaPage({
         Los puntos de Bogotá que reciben tu aparato. Filtra por categoría y
         busca desde tu ubicación o tu localidad.
       </p>
-      <PointsBrowser initialKind={initialKind} />
+      <Suspense fallback={<PointsBrowserSkeleton />}>
+        <MapCatalog initialKind={initialKind} />
+      </Suspense>
     </main>
   );
 }
