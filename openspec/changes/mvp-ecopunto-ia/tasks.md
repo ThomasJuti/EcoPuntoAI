@@ -59,9 +59,9 @@ Chain strategy: stacked-to-main
 
 ## Phase 5: Guidance (PR 5)
 
-- [ ] 4.1 Encode reuse/repair/donate/recycle, risks, dos/donts, wipe/SIM flags in `lib/catalog/device-types.ts`
-- [ ] 4.2 Render ficha one section at a time in `app/(identif)/resultado/guidance.tsx`
-- [ ] 4.3 Optional skippable questions (on, broken, swollen battery, water) adjusting copy in `lib/catalog/conditions.ts`
+- [x] 4.1 Encode reuse/repair/donate/recycle, risks, dos/donts, wipe/SIM flags in `lib/catalog/device-types.ts`
+- [x] 4.2 Render ficha one section at a time in `app/(identif)/resultado/guidance.tsx`
+- [x] 4.3 Optional skippable questions (on, broken, swollen battery, water) adjusting copy in `lib/catalog/conditions.ts`
 
 ## Phase 6: Map (PR 6)
 
