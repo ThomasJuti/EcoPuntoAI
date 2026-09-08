@@ -32,7 +32,7 @@ export default async function PerfilPage() {
   }
 
   const email = user.email ?? "";
-  const initial = (email || "e").charAt(0).toUpperCase();
+  const initial = (user.name || email || "e").charAt(0).toUpperCase();
 
   return (
     <main className="flex min-h-[62dvh] flex-col justify-center">
@@ -40,18 +40,33 @@ export default async function PerfilPage() {
         Perfil
       </h1>
       <section className="liquid-glass mt-10 flex max-w-lg items-center gap-5 rounded-3xl p-6">
-        <div className="liquid-glass-strong grid h-14 w-14 shrink-0 place-items-center rounded-full">
-          <span className="font-heading text-2xl italic leading-none text-petroleum">
-            {initial}
-          </span>
-        </div>
+        {user.avatarUrl ? (
+          // Google avatars 403 without no-referrer
+          <img
+            src={user.avatarUrl}
+            alt=""
+            width={56}
+            height={56}
+            referrerPolicy="no-referrer"
+            className="h-14 w-14 shrink-0 rounded-full object-cover"
+          />
+        ) : (
+          <div className="liquid-glass-strong grid h-14 w-14 shrink-0 place-items-center rounded-full">
+            <span className="font-heading text-2xl italic leading-none text-petroleum">
+              {initial}
+            </span>
+          </div>
+        )}
         <div className="min-w-0">
           <p className="text-xs tracking-wide text-petroleum/55">
             Sesión con Google
           </p>
           <p className="mt-1 truncate text-lg font-medium text-petroleum">
-            {email}
+            {user.name || email}
           </p>
+          {user.name && email ? (
+            <p className="mt-0.5 truncate text-sm text-petroleum/60">{email}</p>
+          ) : null}
         </div>
       </section>
       {isAdmin && (

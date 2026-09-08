@@ -9,9 +9,8 @@ export const config = {
   matcher: [
     "/app/escanear/:path*",
     "/app/resultado/:path*",
-    "/app/perfil/:path*",
     "/app/admin/:path*",
     "/auth/:path*",
-    "/api/((?!points$).*)",
+    "/api/((?!points$|identifications$).*)",
   ],
 };

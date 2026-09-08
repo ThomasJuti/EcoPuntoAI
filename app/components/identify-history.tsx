@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import {
   ArrowRight,
   BatteryFull,
@@ -18,15 +15,15 @@ import {
   Question,
   Television,
   Usb,
-  type Icon,
-} from "@phosphor-icons/react";
-import { labelFor, type WasteKind } from "@/lib/catalog/kinds";
+} from "@phosphor-icons/react/dist/ssr";
+import { labelFor } from "@/lib/catalog/kinds";
 import {
-  parseHistory,
+  listIdentifications,
   type IdentificationRecord,
 } from "@/lib/identify/history";
+import { createClient, resolveSessionUser } from "@/lib/supabase/server";
 
-const KIND_ICONS: Record<WasteKind, Icon> = {
+const KIND_ICONS = {
   phones: DeviceMobile,
   computers: Desktop,
   laptops: Laptop,
@@ -43,14 +40,16 @@ const KIND_ICONS: Record<WasteKind, Icon> = {
   unknown: Question,
 };
 
+const dateFormat = new Intl.DateTimeFormat("es-CO", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+
 function formatWhen(iso: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "";
-  return new Intl.DateTimeFormat("es-CO", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(date);
+  return dateFormat.format(date);
 }
 
 function confidencePct(confidence: number): number | null {
@@ -67,66 +66,35 @@ function historyHref(record: IdentificationRecord): string {
   return `/app/resultado?${params.toString()}`;
 }
 
-/**
- * Historial en Supabase. Inicio no espera auth: hidrata en el cliente.
- */
-export function IdentifyHistory() {
-  const [state, setState] = useState<
-    | { type: "loading" }
-    | { type: "guest" }
-    | { type: "ready"; records: IdentificationRecord[] }
-  >({ type: "loading" });
+function EmptyCard({ title, hint }: { title: string; hint: string }) {
+  return (
+    <div className="liquid-glass rounded-3xl p-6 md:p-8">
+      <p className="text-sm leading-relaxed text-petroleum/75">{title}</p>
+      <p className="mt-1 text-sm text-petroleum/55">{hint}</p>
+    </div>
+  );
+}
 
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/identifications", { signal: controller.signal })
-      .then(async (res) => {
-        if (res.status === 401) {
-          setState({ type: "guest" });
-          return;
-        }
-        const json = (await res.json()) as { identifications?: unknown };
-        setState({
-          type: "ready",
-          records: parseHistory(json.identifications),
-        });
-      })
-      .catch((err: unknown) => {
-        if (err instanceof DOMException && err.name === "AbortError") return;
-        setState({ type: "ready", records: [] });
-      });
-    return () => controller.abort();
-  }, []);
-
-  if (state.type === "loading") return null;
-
-  if (state.type === "guest") {
+export async function IdentifyHistory() {
+  const user = await resolveSessionUser();
+  if (!user) {
     return (
-      <div className="liquid-glass rounded-3xl p-6 md:p-8">
-        <p className="text-sm leading-relaxed text-petroleum/75">
-          Entra con Google para ver tu historial.
-        </p>
-        <p className="mt-1 text-sm text-petroleum/55">
-          Identificar pide sesión; ahí se guarda cada aparato.
-        </p>
-      </div>
+      <EmptyCard
+        title="Entra con Google para ver tu historial."
+        hint="Identificar pide sesión; ahí se guarda cada aparato."
+      />
     );
   }
 
-  if (state.records.length === 0) {
+  const records = await listIdentifications(await createClient());
+  if (records.length === 0) {
     return (
-      <div className="liquid-glass rounded-3xl p-6 md:p-8">
-        <p className="text-sm leading-relaxed text-petroleum/75">
-          Todavía no identificas ningún aparato.
-        </p>
-        <p className="mt-1 text-sm text-petroleum/55">
-          Usa Identificar para escanear tu primer electrónico.
-        </p>
-      </div>
+      <EmptyCard
+        title="Todavía no identificas ningún aparato."
+        hint="Usa Identificar para escanear tu primer electrónico."
+      />
     );
   }
-
-  const records = state.records;
 
   return (
     <ul className="space-y-3">

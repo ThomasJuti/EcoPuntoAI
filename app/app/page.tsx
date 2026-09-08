@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Camera } from "@phosphor-icons/react/dist/ssr";
 import { IdentifyHistory } from "@/app/components/identify-history";
+import { HistoryRowsSkeleton } from "@/app/components/ui-skeleton";
 
 export const metadata: Metadata = {
   title: "Inicio - EcoPunto IA",
@@ -32,7 +34,9 @@ export default function AppHomePage() {
           Historial
         </h2>
         <div className="mt-5">
-          <IdentifyHistory />
+          <Suspense fallback={<HistoryRowsSkeleton />}>
+            <IdentifyHistory />
+          </Suspense>
         </div>
       </section>
     </main>
