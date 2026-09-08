@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   BatteryFull,
@@ -10,6 +11,7 @@ import {
   DeviceTablet,
   Headphones,
   Laptop,
+  MapPin,
   Mouse,
   PlugCharging,
   Printer,
@@ -116,6 +118,18 @@ export function Result({ kind, confidence, path }: Props) {
       </section>
 
       <Guidance kind={valid} />
+
+      {!mustPick && (
+        <div className="mt-8">
+          <Link
+            href={`/app/puntos?kind=${valid}`}
+            className="inline-flex items-center gap-2 rounded-full bg-pine-600 px-6 py-3 text-sm font-medium text-white transition duration-100 ease-[var(--ease-out)] hover:bg-pine-600/90 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+          >
+            <MapPin size={16} weight="fill" />
+            Ver puntos en Bogotá
+          </Link>
+        </div>
+      )}
     </>
   );
 }
