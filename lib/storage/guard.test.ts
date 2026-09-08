@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { assertAuthenticated, HttpError, objectPath } from "./guard.ts";
+import { assertAuthenticated, HttpError, objectPath } from "./guard";
 
 test("unauthenticated upload is denied with 401", () => {
   assert.throws(() => assertAuthenticated(null), (err: unknown) => {

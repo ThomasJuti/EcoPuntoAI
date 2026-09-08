@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { mapGeminiResult } from "./identify.ts";
+import { mapGeminiResult } from "./identify";
 
 test("low-confidence Gemini result maps to unknown with catalog label", () => {
   const result = mapGeminiResult({
