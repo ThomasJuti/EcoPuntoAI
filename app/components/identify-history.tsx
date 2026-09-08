@@ -91,7 +91,7 @@ export async function IdentifyHistory() {
     return (
       <EmptyCard
         title="Todavía no identificas ningún aparato."
-        hint="Usa Identificar para escanear tu primer electrónico."
+        hint="Toma o sube una foto para escanear tu primer electrónico."
       />
     );
   }

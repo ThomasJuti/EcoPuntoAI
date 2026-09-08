@@ -37,6 +37,19 @@ export function mapsUrl(point: Pick<CollectionPoint, "lat" | "lng" | "name">) {
   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dest)}`;
 }
 
+/** OSM embed of the point's neighbourhood. No API key. */
+export function embedMapUrl(
+  point: Pick<CollectionPoint, "lat" | "lng">,
+  span = 0.012,
+) {
+  const minLon = point.lng - span;
+  const minLat = point.lat - span;
+  const maxLon = point.lng + span;
+  const maxLat = point.lat + span;
+  const bbox = `${minLon},${minLat},${maxLon},${maxLat}`;
+  return `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bbox)}&layer=mapnik&marker=${encodeURIComponent(`${point.lat},${point.lng}`)}`;
+}
+
 export function acceptsKind(point: CollectionPoint, kind: WasteKind) {
   if (kind === "unknown") return true;
   return point.accepted.includes(kind);

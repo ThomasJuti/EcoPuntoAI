@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
+  MapPin,
   Warning,
   X,
 } from "@phosphor-icons/react";
@@ -12,7 +13,7 @@ import { deviceFor, type DeviceType } from "@/lib/catalog/device-types";
 import { applyConditions, type Conditions } from "@/lib/catalog/conditions";
 import type { WasteKind } from "@/lib/catalog/kinds";
 
-type Props = { kind: WasteKind };
+type Props = { kind: WasteKind; onShowMap?: () => void };
 
 const QUESTIONS: { key: keyof Conditions; label: string }[] = [
   { key: "powersOn", label: "¿Enciende?" },
@@ -52,7 +53,7 @@ const btnBase =
 const btnPrimary = `${btnBase} bg-pine-600 text-white hover:bg-pine-600/90`;
 const btnGhost = `${btnBase} liquid-glass-strong text-petroleum hover:bg-white/50`;
 
-export function Guidance({ kind }: Props) {
+export function Guidance({ kind, onShowMap }: Props) {
   const [conditions, setConditions] = useState<Conditions>({});
   const [step, setStep] = useState(0);
 
@@ -140,6 +141,12 @@ export function Guidance({ kind }: Props) {
           >
             Siguiente
             <ArrowRight size={16} weight="bold" />
+          </button>
+        )}
+        {isLast && onShowMap && (
+          <button type="button" onClick={onShowMap} className={btnPrimary}>
+            <MapPin size={16} weight="fill" />
+            Ver en el mapa
           </button>
         )}
       </div>

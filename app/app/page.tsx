@@ -1,15 +1,18 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Camera } from "@phosphor-icons/react/dist/ssr";
+import { Capture } from "@/app/app/escanear/capture";
 import { IdentifyHistory } from "@/app/components/identify-history";
+import { SignInForm } from "@/app/components/sign-in-form";
 import { HistoryRowsSkeleton } from "@/app/components/ui-skeleton";
+import { resolveSessionUser } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Inicio - EcoPunto IA",
 };
 
-export default function AppHomePage() {
+export default async function AppHomePage() {
+  const signedIn = Boolean(await resolveSessionUser());
+
   return (
     <main>
       <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
@@ -19,15 +22,14 @@ export default function AppHomePage() {
         Una foto identifica tu aparato y te dice a qué punto de Bogotá
         llevarlo.
       </p>
-      <div className="mt-8">
-        <Link
-          href="/app/escanear"
-          className="liquid-glass-strong inline-flex items-center gap-2.5 rounded-full px-7 py-4 text-base font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/40 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
-        >
-          <Camera size={20} weight="fill" />
-          Identificar
-        </Link>
-      </div>
+
+      {signedIn ? (
+        <Capture />
+      ) : (
+        <div className="mt-8">
+          <SignInForm next="/app" />
+        </div>
+      )}
 
       <section className="mt-20 md:mt-24">
         <h2 className="font-heading text-2xl font-normal italic leading-tight tracking-[-0.01em] text-petroleum md:text-3xl">

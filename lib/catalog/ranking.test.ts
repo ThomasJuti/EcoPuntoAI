@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { rankPoints, type CollectionPoint } from "./ranking";
+import { embedMapUrl, mapsUrl, rankPoints, type CollectionPoint } from "./ranking";
 import type { WasteKind } from "./kinds";
 
 function point(
@@ -41,6 +41,16 @@ test("inactive and out-of-city points are dropped", () => {
   const chia = point("chia", ["batteries"], 4.86, -74.05);
   const ranked = rankPoints([dead, chia], "batteries", ORIGIN);
   assert.equal(ranked.length, 0);
+});
+
+test("embedMapUrl pins the point inside a local bbox", () => {
+  const url = embedMapUrl({ lat: 4.6948, lng: -74.0864 });
+  assert.match(url, /^https:\/\/www\.openstreetmap\.org\/export\/embed\.html/);
+  assert.match(url, /marker=4\.6948%2C-74\.0864/);
+  assert.equal(
+    mapsUrl({ lat: 4.69, lng: -74.08, name: "x" }).includes("google.com/maps/dir"),
+    true,
+  );
 });
 
 test("unknown lists every active Bogotá point", () => {

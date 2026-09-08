@@ -134,6 +134,41 @@
   }
 }
 
+/* Modal nativo (dialog): entrada opacity + scale, backdrop atenuado */
+.modal-map {
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity 250ms var(--ease-out),
+    transform 250ms var(--ease-out);
+}
+.modal-map[open] {
+  opacity: 1;
+  transform: none;
+}
+@starting-style {
+  .modal-map[open] {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+.modal-map::backdrop {
+  background: rgb(10 61 74 / 0.35);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-map {
+    transform: none;
+    transition-duration: 150ms;
+  }
+  @starting-style {
+    .modal-map[open] {
+      transform: none;
+    }
+  }
+}
+
 @keyframes ken-burns {
   from {
     transform: scale(1);

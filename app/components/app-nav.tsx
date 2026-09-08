@@ -18,7 +18,6 @@ function isActive(pathname: string, href: string, exact: boolean) {
 
 export function AppNav() {
   const pathname = usePathname();
-  const escanearActive = isActive(pathname, "/app/escanear", false);
 
   return (
     <header className="fixed inset-x-0 top-4 z-50 flex items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-16">
@@ -57,8 +56,7 @@ export function AppNav() {
       </nav>
 
       <Link
-        href="/app/escanear"
-        aria-current={escanearActive ? "page" : undefined}
+        href="/app"
         className="liquid-glass-strong inline-flex h-11 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-sm font-semibold text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] sm:h-12 sm:px-5"
       >
         <Camera size={18} weight="fill" />

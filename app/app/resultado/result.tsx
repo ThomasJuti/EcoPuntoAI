@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   BatteryFull,
@@ -11,7 +11,6 @@ import {
   DeviceTablet,
   Headphones,
   Laptop,
-  MapPin,
   Mouse,
   PlugCharging,
   Printer,
@@ -27,6 +26,7 @@ import {
   labelFor,
   type WasteKind,
 } from "@/lib/catalog/kinds";
+import { RecommendedPointModal } from "@/app/components/recommended-point-modal";
 import { Guidance } from "./guidance";
 
 const KIND_ICONS: Record<WasteKind, Icon> = {
@@ -54,6 +54,7 @@ type Props = {
 
 export function Result({ kind, confidence, path }: Props) {
   const router = useRouter();
+  const [mapOpen, setMapOpen] = useState(false);
 
   const valid: WasteKind = kind && isWasteKind(kind) ? kind : "unknown";
   const mustPick = valid === "unknown";
@@ -124,18 +125,14 @@ export function Result({ kind, confidence, path }: Props) {
         </select>
       </section>
 
-      <Guidance kind={valid} />
+      <Guidance kind={valid} onShowMap={() => setMapOpen(true)} />
 
       {!mustPick && (
-        <div className="mt-8">
-          <Link
-            href={`/app/puntos?kind=${valid}`}
-            className="inline-flex items-center gap-2 rounded-full bg-pine-600 px-6 py-3 text-sm font-medium text-white transition duration-100 ease-[var(--ease-out)] hover:bg-pine-600/90 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
-          >
-            <MapPin size={16} weight="fill" />
-            Ver puntos en Bogotá
-          </Link>
-        </div>
+        <RecommendedPointModal
+          kind={valid}
+          open={mapOpen}
+          onClose={() => setMapOpen(false)}
+        />
       )}
     </>
   );

@@ -6,6 +6,7 @@ import {
   MagnifyingGlass,
   MapPin,
   SpinnerGap,
+  X,
 } from "@phosphor-icons/react";
 import { WASTE_KINDS, labelFor, type WasteKind } from "@/lib/catalog/kinds";
 import { listPoints, type PointsOrigin } from "@/lib/catalog/list";
@@ -76,6 +77,19 @@ export function PointsBrowser({
     const value = localityInput.trim();
     setGpsError(null);
     setOrigin(value ? { type: "locality", locality: value } : { type: "default" });
+  }
+
+  const dirty =
+    kind !== "unknown" ||
+    origin.type !== "default" ||
+    localityInput.trim() !== "" ||
+    gpsError !== null;
+
+  function clearFilters() {
+    setKind("unknown");
+    setOrigin({ type: "default" });
+    setLocalityInput("");
+    setGpsError(null);
   }
 
   const gpsActive = origin.type === "gps";
@@ -153,6 +167,16 @@ export function PointsBrowser({
             <MagnifyingGlass size={16} weight="bold" />
             Buscar
           </button>
+          {dirty && (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="liquid-glass-strong inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+            >
+              <X size={16} weight="bold" />
+              Limpiar
+            </button>
+          )}
         </form>
       </div>
 

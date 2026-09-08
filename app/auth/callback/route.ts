@@ -19,5 +19,5 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/app/escanear`);
+  return NextResponse.redirect(`${origin}/app`);
 }
