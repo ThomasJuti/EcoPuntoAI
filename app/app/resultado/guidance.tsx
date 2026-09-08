@@ -10,17 +10,19 @@ import {
   X,
 } from "@phosphor-icons/react";
 import { deviceFor, type DeviceType } from "@/lib/catalog/device-types";
-import { applyConditions, type Conditions } from "@/lib/catalog/conditions";
+import {
+  applyConditions,
+  CONDITION_QUESTIONS,
+  type Conditions,
+} from "@/lib/catalog/conditions";
 import type { WasteKind } from "@/lib/catalog/kinds";
 
-type Props = { kind: WasteKind; onShowMap?: () => void };
-
-const QUESTIONS: { key: keyof Conditions; label: string }[] = [
-  { key: "powersOn", label: "¿Enciende?" },
-  { key: "broken", label: "¿Está roto?" },
-  { key: "swollenBattery", label: "¿Batería hinchada?" },
-  { key: "waterExposed", label: "¿Se mojó?" },
-];
+type Props = {
+  kind: WasteKind;
+  path: string | null;
+  initialAnswers?: Conditions;
+  onShowMap?: () => void;
+};
 
 const FLAGS: {
   key: "canUse" | "canReuse" | "canRepair" | "canDonate" | "canRecycle";
@@ -53,12 +55,16 @@ const btnBase =
 const btnPrimary = `${btnBase} bg-pine-600 text-white hover:bg-pine-600/90`;
 const btnGhost = `${btnBase} liquid-glass-strong text-petroleum hover:bg-white/50`;
 
-export function Guidance({ kind, onShowMap }: Props) {
-  const [conditions, setConditions] = useState<Conditions>({});
+export function Guidance({
+  kind,
+  path,
+  initialAnswers = {},
+  onShowMap,
+}: Props) {
+  const [conditions, setConditions] = useState<Conditions>(initialAnswers);
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    setConditions({});
     setStep(0);
   }, [kind]);
 
@@ -79,12 +85,27 @@ export function Guidance({ kind, onShowMap }: Props) {
   const isFirst = step === 0;
   const isLast = step === sections.length - 1;
 
+  function persist(next: Conditions) {
+    if (!path) return;
+    void fetch("/api/identifications", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path, answers: next }),
+    });
+  }
+
   function answer(key: keyof Conditions, value: boolean) {
-    setConditions((c) => ({ ...c, [key]: value }));
+    setConditions((c) => {
+      const next = { ...c, [key]: value };
+      persist(next);
+      return next;
+    });
   }
 
   function skip() {
-    setConditions({});
+    const next: Conditions = {};
+    setConditions(next);
+    persist(next);
     setStep(1);
   }
 
@@ -168,7 +189,7 @@ function ConditionStep({
 }) {
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      {QUESTIONS.map((q) => (
+      {CONDITION_QUESTIONS.map((q) => (
         <fieldset key={q.key}>
           <legend className="text-sm font-medium text-petroleum">
             {q.label}

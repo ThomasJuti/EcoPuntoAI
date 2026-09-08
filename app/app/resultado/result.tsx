@@ -26,8 +26,10 @@ import {
   labelFor,
   type WasteKind,
 } from "@/lib/catalog/kinds";
+import type { Conditions } from "@/lib/catalog/conditions";
 import { RecommendedPointModal } from "@/app/components/recommended-point-modal";
 import { Guidance } from "./guidance";
+import { ResultBackButton } from "./result-back-button";
 
 const KIND_ICONS: Record<WasteKind, Icon> = {
   phones: DeviceMobile,
@@ -50,9 +52,10 @@ type Props = {
   kind: string | null;
   confidence: string | null;
   path: string | null;
+  answers?: Conditions;
 };
 
-export function Result({ kind, confidence, path }: Props) {
+export function Result({ kind, confidence, path, answers = {} }: Props) {
   const router = useRouter();
   const [mapOpen, setMapOpen] = useState(false);
 
@@ -85,6 +88,8 @@ export function Result({ kind, confidence, path }: Props) {
 
   return (
     <>
+      <ResultBackButton />
+
       <div className="liquid-glass mb-8 grid h-12 w-12 place-items-center rounded-2xl text-pine-600">
         <KindIcon size={24} weight="regular" />
       </div>
@@ -125,7 +130,12 @@ export function Result({ kind, confidence, path }: Props) {
         </select>
       </section>
 
-      <Guidance kind={valid} onShowMap={() => setMapOpen(true)} />
+      <Guidance
+        kind={valid}
+        path={path}
+        initialAnswers={answers}
+        onShowMap={() => setMapOpen(true)}
+      />
 
       {!mustPick && (
         <RecommendedPointModal

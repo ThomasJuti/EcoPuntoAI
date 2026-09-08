@@ -16,6 +16,7 @@ import {
   Television,
   Usb,
 } from "@phosphor-icons/react/dist/ssr";
+import { formatAnsweredConditions } from "@/lib/catalog/conditions";
 import { labelFor } from "@/lib/catalog/kinds";
 import {
   listIdentifications,
@@ -103,6 +104,7 @@ export async function IdentifyHistory() {
         const when = formatWhen(record.at);
         const pct =
           record.kind !== "unknown" ? confidencePct(record.confidence) : null;
+        const answered = formatAnsweredConditions(record.answers);
         return (
           <li key={record.path}>
             <Link
@@ -120,6 +122,13 @@ export async function IdentifyHistory() {
                   {when}
                   {pct !== null && ` · ${pct}% de confianza`}
                 </span>
+                {answered.length > 0 && (
+                  <span className="mt-1.5 block text-sm leading-relaxed text-petroleum/70">
+                    {answered
+                      .map((item) => `${item.label} ${item.value}`)
+                      .join(" · ")}
+                  </span>
+                )}
               </span>
               <ArrowRight
                 size={18}

@@ -7,6 +7,41 @@ export type Conditions = {
   waterExposed?: boolean;
 };
 
+export const CONDITION_QUESTIONS: {
+  key: keyof Conditions;
+  label: string;
+}[] = [
+  { key: "powersOn", label: "¿Enciende?" },
+  { key: "broken", label: "¿Está roto?" },
+  { key: "swollenBattery", label: "¿Batería hinchada?" },
+  { key: "waterExposed", label: "¿Se mojó?" },
+];
+
+const ANSWER_KEYS = CONDITION_QUESTIONS.map((q) => q.key);
+
+export function parseAnswers(raw: unknown): Conditions {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+  const row = raw as Record<string, unknown>;
+  const out: Conditions = {};
+  for (const key of ANSWER_KEYS) {
+    if (typeof row[key] === "boolean") out[key] = row[key];
+  }
+  return out;
+}
+
+export function formatAnsweredConditions(
+  answers: Conditions,
+): { label: string; value: "Sí" | "No" }[] {
+  const out: { label: string; value: "Sí" | "No" }[] = [];
+  for (const q of CONDITION_QUESTIONS) {
+    const value = answers[q.key];
+    if (typeof value === "boolean") {
+      out.push({ label: q.label, value: value ? "Sí" : "No" });
+    }
+  }
+  return out;
+}
+
 const SWOLLEN_STORAGE =
   "No la guardes. Aísla bornes, déjala en un recipiente no metálico y llévala ya a un punto de baterías.";
 const SWOLLEN_TRANSPORT =

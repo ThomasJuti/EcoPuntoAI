@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { ScanSmiley } from "@phosphor-icons/react/dist/ssr";
 import { SignInForm } from "@/app/components/sign-in-form";
-import { getUser } from "@/lib/supabase/server";
+import { getIdentification } from "@/lib/identify/history";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { Result } from "./result";
+import { ResultBackButton } from "./result-back-button";
 
 export const metadata: Metadata = {
   title: "Resultado - EcoPunto IA",
@@ -29,10 +31,13 @@ export default async function ResultadoPage({
     : "/app/resultado";
 
   const user = await getUser();
+  const saved =
+    user && path ? await getIdentification(await createClient(), path) : null;
 
   if (!user) {
     return (
       <main className="flex min-h-[62dvh] flex-col justify-center">
+        <ResultBackButton />
         <div className="liquid-glass mb-8 grid h-12 w-12 place-items-center rounded-2xl text-pine-600">
           <ScanSmiley size={24} weight="regular" />
         </div>
@@ -51,7 +56,12 @@ export default async function ResultadoPage({
 
   return (
     <main>
-      <Result kind={kind} confidence={confidence} path={path} />
+      <Result
+        kind={kind}
+        confidence={confidence}
+        path={path}
+        answers={saved?.answers ?? {}}
+      />
     </main>
   );
 }

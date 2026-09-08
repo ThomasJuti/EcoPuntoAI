@@ -12,6 +12,18 @@ test("recordFromRow maps supabase columns", () => {
   assert.equal(parsed?.path, "u/1");
   assert.equal(parsed?.kind, "phones");
   assert.equal(parsed?.at, "2026-09-08T18:00:00.000Z");
+  assert.deepEqual(parsed?.answers, {});
+});
+
+test("recordFromRow maps guidance answers", () => {
+  const parsed = recordFromRow({
+    storage_path: "u/1",
+    waste_kind: "phones",
+    confidence: 0.92,
+    created_at: "2026-09-08T18:00:00.000Z",
+    answers: { powersOn: true, broken: false },
+  });
+  assert.deepEqual(parsed?.answers, { powersOn: true, broken: false });
 });
 
 test("parseHistory drops junk and keeps catalog kinds", () => {
