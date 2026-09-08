@@ -1,0 +1,18 @@
+{
+  "kinds": [
+    { "id": "phones", "label": "Celular", "blurb": "Teléfono móvil o smartphone." },
+    { "id": "computers", "label": "Computador", "blurb": "Torre o computador de escritorio." },
+    { "id": "laptops", "label": "Portátil", "blurb": "Computador portátil o notebook." },
+    { "id": "tablets", "label": "Tablet", "blurb": "Tableta táctil." },
+    { "id": "chargers", "label": "Cargador", "blurb": "Cargador o adaptador de corriente." },
+    { "id": "batteries", "label": "Batería", "blurb": "Batería recargable de un aparato." },
+    { "id": "cells", "label": "Pila", "blurb": "Pila desechable o botón." },
+    { "id": "headphones", "label": "Audífonos", "blurb": "Audífonos, diadema o earbuds." },
+    { "id": "tvs", "label": "Televisor", "blurb": "Televisor o monitor de pantalla grande." },
+    { "id": "printers", "label": "Impresora", "blurb": "Impresora o multifuncional." },
+    { "id": "cables", "label": "Cables", "blurb": "Cables, cargadores USB o extensiones." },
+    { "id": "peripherals", "label": "Periférico", "blurb": "Mouse, teclado, webcam u otro accesorio." },
+    { "id": "small_appliances", "label": "Electrodoméstico pequeño", "blurb": "Aparato pequeño de cocina o cuidado personal." },
+    { "id": "unknown", "label": "No sé qué es", "blurb": "Elige la categoría a mano si la foto no alcanza." }
+  ]
+}
