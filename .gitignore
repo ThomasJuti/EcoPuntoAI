@@ -26,12 +26,11 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-# Agent / skill caches — keep .cursor/rules
+# Agent / skill caches — local only
 .agents/
 .atl/
-.cursor/*
-!.cursor/rules/
-!.cursor/rules/**
+.cursor/
+skills-lock.json
 
 # Vercel / local scratch
 .vercel
