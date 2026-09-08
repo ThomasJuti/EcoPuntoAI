@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Camera, House, MapPin, User } from "@phosphor-icons/react";
+import { BookOpen, House, MapPin, User } from "@phosphor-icons/react";
 
 const LINKS = [
   { href: "/app", label: "Inicio", icon: House, exact: true },
   { href: "/app/mapa", label: "Mapa", icon: MapPin, exact: false },
   { href: "/app/aprender", label: "Aprende", icon: BookOpen, exact: false },
-  { href: "/app/perfil", label: "Perfil", icon: User, exact: false },
 ];
 
 function isActive(pathname: string, href: string, exact: boolean) {
@@ -18,13 +17,14 @@ function isActive(pathname: string, href: string, exact: boolean) {
 
 export function AppNav() {
   const pathname = usePathname();
+  const perfilActive = isActive(pathname, "/app/perfil", false);
 
   return (
-    <header className="fixed inset-x-0 top-4 z-50 flex items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-16">
+    <header className="fixed inset-x-0 top-4 z-50 grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:gap-3 sm:px-6 lg:px-16">
       <Link
         href="/app"
         aria-label="EcoPunto IA - inicio de la app"
-        className="liquid-glass grid h-11 w-11 shrink-0 place-items-center rounded-full text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/40 active:scale-[0.97] sm:h-12 sm:w-12"
+        className="liquid-glass grid h-11 w-11 shrink-0 place-items-center justify-self-start rounded-full text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/40 active:scale-[0.97] sm:h-12 sm:w-12"
       >
         <span className="font-heading text-2xl italic">e</span>
       </Link>
@@ -56,12 +56,13 @@ export function AppNav() {
       </nav>
 
       <Link
-        href="/app"
-        aria-label="Identificar"
-        className="liquid-glass-strong inline-flex h-11 w-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-0 text-sm font-semibold text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] sm:h-12 sm:w-auto sm:px-5"
+        href="/app/perfil"
+        aria-label="Perfil"
+        aria-current={perfilActive ? "page" : undefined}
+        className="liquid-glass-strong inline-flex h-11 w-11 shrink-0 items-center justify-center justify-self-end gap-1.5 rounded-full px-0 text-sm font-semibold text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] sm:h-12 sm:w-auto sm:px-5"
       >
-        <Camera size={18} weight="fill" />
-        <span className="hidden sm:inline">Identificar</span>
+        <User size={18} weight={perfilActive ? "fill" : "regular"} />
+        <span className="hidden sm:inline">Perfil</span>
       </Link>
     </header>
   );
