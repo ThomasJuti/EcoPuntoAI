@@ -1,0 +1,39 @@
+# Dependencies and build
+node_modules/
+.next/
+out/
+dist/
+coverage/
+.turbo/
+*.tsbuildinfo
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+
+# Supabase local
+supabase/.temp/
+supabase/.branches/
+supabase/.env
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.pem
+.idea/
+.vscode/
+*.log
+npm-debug.log*
+
+# Agent / skill caches — keep .cursor/rules
+.agents/
+.atl/
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+
+# Vercel / local scratch
+.vercel
+.tmp-hero/
+tmp/

@@ -1,0 +1,26 @@
+schemaName: gentle-ai.sdd-status
+schemaVersion: 1
+changeName: mvp-ecopunto-ia
+artifactStore: openspec
+status: planning
+artifacts:
+  explore: done
+  proposal: done
+  specs: done
+  design: done
+  tasks: done
+nextRecommended: apply
+blockedReasons:
+  - Google OAuth client and Gemini API key are not provisioned yet
+  - First collection-point seed can start curated; visor download is optional later
+relationships:
+  dependsOn: []
+  supersedes: []
+  amends: []
+  conflictsWith: []
+  sameDomainActiveChanges: []
+taskProgress:
+  total: 32
+  completed: 0
+  pending: 32
+  allComplete: false

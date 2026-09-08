@@ -1,0 +1,41 @@
+schema: spec-driven
+
+context: |
+  Product: EcoPunto IA — Bogotá-only web app that identifies e-waste and shows where to take it.
+  Stack: Next.js App Router PWA, Supabase (Postgres, Auth Google, Storage), Gemini vision API.
+  Geography: Bogotá D.C. only. Collection points curated from official posconsumo sources.
+  Auth: Google via Supabase. Identify/report/admin require login. Landing, Learn, map read are public.
+  Admin: is_admin allowlist. MVP admin email: thomasjuti1210@gmail.com. No multi-role RBAC.
+  IA: `/` marketing landing, then `/app` product shell (Inicio, Escanear, Mapa, Aprende, Perfil).
+  Delivery: stacked PRs per feature into main.
+
+strict_tdd: false
+
+testing:
+  runner: none
+  layers: []
+  notes: Greenfield. Add Vitest + Playwright when scaffolding.
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Document architecture decisions with rationale
+    - Guidance content MUST come from the device catalog, not free-form LLM output
+  tasks:
+    - Group by chained work units under the 400-line review budget
+    - Keep tasks completable in one session
+  apply:
+    guidelines:
+      - Follow existing code patterns
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: ""
+    build_command: ""
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
