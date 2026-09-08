@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Camera } from "@phosphor-icons/react/dist/ssr";
 import { SignInForm } from "@/app/components/sign-in-form";
 import { getUser } from "@/lib/supabase/server";
+import { Capture } from "./capture";
 
 export const metadata: Metadata = {
   title: "Escanear - EcoPunto IA",
@@ -38,6 +39,7 @@ export default async function EscanearPage() {
       <p className="mt-3 max-w-[52ch] text-lg font-light leading-relaxed text-petroleum/70">
         Toma o sube una foto del aparato para identificarlo.
       </p>
+      <Capture />
     </main>
   );
 }

@@ -51,11 +51,11 @@ Chain strategy: stacked-to-main
 
 ## Phase 4: Identify (PR 4)
 
-- [ ] 4.1 Add catalog IDs and labels in `data/seed/device-types.json`
-- [ ] 4.2 RED: low-confidence Gemini result maps to `unknown` (no invented name)
-- [ ] 4.3 Implement `lib/vision/identify.ts` mapping Gemini → `WasteKind`
-- [ ] 4.4 Camera + gallery capture in `app/(identif)/escanear/page.tsx` uploading to private Storage
-- [ ] 4.5 Result + correction UI in `app/(identif)/resultado/page.tsx`
+- [x] 4.1 Add catalog IDs and labels in `data/seed/device-types.json`
+- [x] 4.2 RED: low-confidence Gemini result maps to `unknown` (no invented name)
+- [x] 4.3 Implement `lib/vision/identify.ts` mapping Gemini → `WasteKind`
+- [x] 4.4 Camera + gallery capture in `app/(identif)/escanear/page.tsx` uploading to private Storage
+- [x] 4.5 Result + correction UI in `app/(identif)/resultado/page.tsx`
 
 ## Phase 5: Guidance (PR 5)
 
