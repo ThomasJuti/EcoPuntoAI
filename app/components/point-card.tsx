@@ -7,6 +7,7 @@ import {
 } from "@phosphor-icons/react";
 import { labelFor } from "@/lib/catalog/kinds";
 import { mapsUrl, type RankedPoint } from "@/lib/catalog/ranking";
+import { ReportPoint } from "./report-point";
 
 const kmFormat = new Intl.NumberFormat("es-CO", {
   minimumFractionDigits: 1,
@@ -86,6 +87,10 @@ export function PointCard({ point }: { point: RankedPoint }) {
           Cómo llegar
           <ArrowUpRight size={14} weight="bold" />
         </a>
+      </div>
+
+      <div className="mt-3">
+        <ReportPoint pointId={point.id} pointName={point.name} />
       </div>
     </article>
   );
