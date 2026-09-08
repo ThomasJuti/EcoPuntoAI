@@ -36,9 +36,9 @@ Chain strategy: stacked-to-main
 
 ## Phase 2: App shell (PR 2)
 
-- [ ] 2.1 Add design tokens (green, petroleum blue, white, greys; warning colors only for alerts)
-- [ ] 2.2 Create app shell nav Inicio / Escanear / Mapa / Aprende / Perfil in `app/components/app-nav.tsx` with Identificar as the largest CTA
-- [ ] 2.3 Replace `/app` placeholder with in-app Inicio
+- [x] 2.1 Add design tokens (green, petroleum blue, white, greys; warning colors only for alerts)
+- [x] 2.2 Create app shell nav Inicio / Escanear / Mapa / Aprende / Perfil in `app/components/app-nav.tsx` with Identificar as the largest CTA
+- [x] 2.3 Replace `/app` placeholder with in-app Inicio
 
 ## Phase 3: Auth and Storage (PR 3)
 

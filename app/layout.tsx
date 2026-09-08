@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Barlow } from "next/font/google";
 import "./globals.css";
 
@@ -19,6 +19,10 @@ export const metadata: Metadata = {
   title: "EcoPunto IA - Qué hacer con tus electrónicos viejos en Bogotá",
   description:
     "Le tomas una foto al aparato, la app lo identifica y te muestra dónde llevarlo en Bogotá.",
+};
+
+export const viewport: Viewport = {
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
