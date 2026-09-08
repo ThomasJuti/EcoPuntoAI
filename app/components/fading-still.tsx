@@ -40,7 +40,7 @@ export function FadingStill({
           alt={alt}
           loading="eager"
           fetchPriority={i === 0 ? "high" : "auto"}
-          className={`ken-burns pointer-events-none absolute max-w-none object-cover ${imgClassName ?? "inset-0 h-full w-full"}`}
+          className={`ken-burns pointer-events-none absolute inset-0 h-full w-full object-cover ${imgClassName ?? ""}`}
           initial={{ opacity: i === 0 ? 1 : 0 }}
           animate={{ opacity: i === index ? 1 : 0 }}
           transition={{

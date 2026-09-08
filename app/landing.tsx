@@ -142,15 +142,16 @@ function Hero() {
       <FadingStill
         src={HERO_IMAGES}
         className="absolute inset-0"
-        imgClassName="inset-y-0 left-[42%] h-full w-full origin-left md:left-[30%] lg:left-[34%]"
+        imgClassName="object-center"
       />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,white_0%,white_44%,transparent_72%),linear-gradient(to_bottom,transparent_55%,white_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/20 via-transparent via-[58%] to-white" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-[min(100%,48rem)] bg-gradient-to-r from-white/85 via-white/60 via-[65%] to-transparent" />
 
       <div
         id="contenido"
         className="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col justify-center px-6 pb-28 pt-28 text-left lg:px-16"
       >
-        <h1 className="max-w-[13ch] pb-1 font-heading text-6xl font-normal italic leading-[1.05] tracking-[-0.04em] text-petroleum md:text-7xl lg:text-[5.25rem]">
+        <h1 className="max-w-[13ch] pb-1 font-heading text-6xl font-normal italic leading-[1.05] tracking-[-0.04em] text-petroleum [text-shadow:0_0_28px_#fff,0_0_8px_#fff] md:text-7xl lg:text-[5.25rem]">
           <BlurText
             className="justify-start"
             text="El cajón de cables no tiene que ser basura"
@@ -158,7 +159,7 @@ function Hero() {
         </h1>
 
         <Reveal delay={0.35}>
-          <p className="mt-6 max-w-[36ch] text-lg font-light leading-relaxed text-petroleum/80">
+          <p className="mt-6 max-w-[36ch] text-lg font-light leading-relaxed text-petroleum">
             EcoPunto IA identifica tu electrónico con una foto y te muestra
             puntos de entrega en Bogotá que sí reciben ese residuo.
           </p>
