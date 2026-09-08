@@ -1,0 +1,27 @@
+---
+description: Product UI feels like Apple — materials, spatial motion, press-down. Landing stays editorial.
+globs: app/**/*.{tsx,css}
+alwaysApply: false
+---
+
+# EcoPunto product UI = Apple feel
+
+The product (`/app` and future app chrome) should feel like an Apple interface: direct, interruptible, materials, spatial. Keep pine `#2F7050` and petroleum `#0A3D4A` — do not clone iOS blue or San Francisco.
+
+The marketing landing (`app/landing.tsx`) stays editorial (Instrument Serif, grain, zig-zag). Do not restyle it into Settings.app.
+
+When building or reviewing product UI / motion, read and follow:
+
+- `.cursor/skills/apple-design/SKILL.md`
+- `.cursor/skills/animate/SKILL.md` for new motion
+- `.cursor/skills/review-animations/SKILL.md` when auditing motion
+
+Hard rules on product surfaces:
+
+- Feedback on pointer-down (`active:scale-[0.97]`, ~100ms), not on click
+- `transform` / `opacity` only; never `scale(0)` or `ease-in` on enter
+- UI motion under 300ms; springs for anything the user can grab
+- Translucent chrome (`liquid-glass`) with content scrolling underneath
+- Respect `prefers-reduced-motion` and `prefers-reduced-transparency`
+- Grouped lists, large titles, continuous corners
+- Every screen answers: where am I, where can I go, how do I leave
