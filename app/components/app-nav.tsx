@@ -57,10 +57,11 @@ export function AppNav() {
 
       <Link
         href="/app"
-        className="liquid-glass-strong inline-flex h-11 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-sm font-semibold text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] sm:h-12 sm:px-5"
+        aria-label="Identificar"
+        className="liquid-glass-strong inline-flex h-11 w-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-0 text-sm font-semibold text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] sm:h-12 sm:w-auto sm:px-5"
       >
         <Camera size={18} weight="fill" />
-        Identificar
+        <span className="hidden sm:inline">Identificar</span>
       </Link>
     </header>
   );

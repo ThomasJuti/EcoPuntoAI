@@ -101,7 +101,7 @@ export function PointsBrowser({
       <div
         role="group"
         aria-label="Filtrar por categoría"
-        className="-mx-6 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:-mx-16 lg:px-16"
+        className="chip-scroll-fade -mx-6 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:-mx-16 lg:px-16"
       >
         <div className="flex w-max gap-2">
           {WASTE_KINDS.map((row) => {
@@ -125,12 +125,12 @@ export function PointsBrowser({
         </div>
       </div>
 
-      <div className="mt-6 flex flex-wrap items-center gap-3">
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         <button
           type="button"
           onClick={useMyLocation}
           disabled={locating}
-          className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition duration-100 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 disabled:cursor-wait disabled:opacity-60 disabled:active:scale-100 ${
+          className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition duration-100 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 disabled:cursor-wait disabled:opacity-60 disabled:active:scale-100 sm:w-auto ${
             gpsActive
               ? "bg-pine-600 text-white"
               : "liquid-glass-strong text-petroleum hover:bg-white/50"
@@ -146,7 +146,7 @@ export function PointsBrowser({
 
         <form
           onSubmit={onLocalitySubmit}
-          className="flex min-w-0 flex-1 flex-wrap items-center gap-2 sm:flex-nowrap"
+          className="flex w-full min-w-0 flex-col gap-2 sm:flex-1 sm:flex-row sm:flex-nowrap sm:items-center"
         >
           <label htmlFor="locality" className="sr-only">
             Tu localidad
@@ -156,27 +156,29 @@ export function PointsBrowser({
             type="text"
             value={localityInput}
             onChange={(event) => setLocalityInput(event.target.value)}
-            placeholder="Tu localidad: Kennedy, Suba, Chapinero…"
+            placeholder="Kennedy, Suba, Chapinero…"
             autoComplete="off"
-            className="liquid-glass-strong min-w-0 flex-1 rounded-full px-5 py-3 text-sm font-medium text-petroleum placeholder:text-petroleum/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-pine-600/50"
+            className="liquid-glass-strong w-full rounded-full px-5 py-3 text-sm font-medium text-petroleum placeholder:text-petroleum/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-pine-600/50 sm:min-w-0 sm:flex-1"
           />
-          <button
-            type="submit"
-            className="liquid-glass-strong inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
-          >
-            <MagnifyingGlass size={16} weight="bold" />
-            Buscar
-          </button>
-          {dirty && (
+          <div className="flex gap-2">
             <button
-              type="button"
-              onClick={clearFilters}
-              className="liquid-glass-strong inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+              type="submit"
+              className="liquid-glass-strong inline-flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 sm:flex-none"
             >
-              <X size={16} weight="bold" />
-              Limpiar
+              <MagnifyingGlass size={16} weight="bold" />
+              Buscar
             </button>
-          )}
+            {dirty && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="liquid-glass-strong inline-flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 sm:flex-none"
+              >
+                <X size={16} weight="bold" />
+                Limpiar
+              </button>
+            )}
+          </div>
         </form>
       </div>
 

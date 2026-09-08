@@ -134,6 +134,18 @@
   }
 }
 
+/* Fila de chips: fundido en el borde derecho para sugerir scroll horizontal */
+@media (max-width: 639px) {
+  .chip-scroll-fade {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      #000 calc(100% - 2.5rem),
+      transparent
+    );
+    mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
+  }
+}
+
 /* Modal nativo (dialog): entrada opacity + scale, backdrop atenuado */
 .modal-map {
   opacity: 0;
