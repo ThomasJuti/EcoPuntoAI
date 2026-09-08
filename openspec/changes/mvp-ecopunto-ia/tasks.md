@@ -75,11 +75,11 @@ Chain strategy: stacked-to-main
 
 ## Phase 7: Education, reports, admin (PR 7)
 
-- [ ] 6.1 Aprende sections in `app/(public)/aprender/page.tsx`
-- [ ] 6.2 RED: non-admin Google user cannot PATCH/delete points (403)
-- [ ] 6.3 Reports table + citizen form in `supabase/migrations/0004_reports.sql` and `app/components/report-point.tsx`
-- [ ] 6.4 Admin CRUD/deactivate in `app/admin/puntos/page.tsx`
-- [ ] 6.5 Admin report queue resolve/dismiss in `app/admin/reportes/page.tsx`
+- [x] 6.1 Aprende sections in `app/(public)/aprender/page.tsx`
+- [x] 6.2 RED: non-admin Google user cannot PATCH/delete points (403)
+- [x] 6.3 Reports table + citizen form in `supabase/migrations/0004_reports.sql` and `app/components/report-point.tsx`
+- [x] 6.4 Admin CRUD/deactivate in `app/admin/puntos/page.tsx`
+- [x] 6.5 Admin report queue resolve/dismiss in `app/admin/reportes/page.tsx`
 
 ## Phase 7: Verify
 

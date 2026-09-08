@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { SignOut, User } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
+import { Flag, MapPin, SignOut, User } from "@phosphor-icons/react/dist/ssr";
 import { signOut } from "@/app/auth/actions";
 import { SignInForm } from "@/app/components/sign-in-form";
+import { getIsAdmin } from "@/lib/auth/admin";
 import { getUser } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -32,6 +34,7 @@ export default async function PerfilPage() {
 
   const email = user.email ?? "";
   const initial = (email || "e").charAt(0).toUpperCase();
+  const isAdmin = await getIsAdmin();
 
   return (
     <main className="flex min-h-[62dvh] flex-col justify-center">
@@ -53,6 +56,24 @@ export default async function PerfilPage() {
           </p>
         </div>
       </section>
+      {isAdmin && (
+        <nav aria-label="Administración" className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href="/app/admin/puntos"
+            className="liquid-glass inline-flex items-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium text-petroleum/80 transition duration-200 ease-[var(--ease-out)] hover:bg-white/40 hover:text-petroleum active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+          >
+            <MapPin size={16} weight="regular" />
+            Puntos
+          </Link>
+          <Link
+            href="/app/admin/reportes"
+            className="liquid-glass inline-flex items-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium text-petroleum/80 transition duration-200 ease-[var(--ease-out)] hover:bg-white/40 hover:text-petroleum active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+          >
+            <Flag size={16} weight="regular" />
+            Reportes
+          </Link>
+        </nav>
+      )}
       <form action={signOut} className="mt-8">
         <button
           type="submit"
