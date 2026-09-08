@@ -25,6 +25,7 @@ import {
   labelFor,
   type WasteKind,
 } from "@/lib/catalog/kinds";
+import { Guidance } from "./guidance";
 
 const KIND_ICONS: Record<WasteKind, Icon> = {
   phones: DeviceMobile,
@@ -114,9 +115,7 @@ export function Result({ kind, confidence, path }: Props) {
         </select>
       </section>
 
-      <p className="mt-8 max-w-[52ch] text-sm font-light leading-relaxed text-petroleum/55">
-        Después te mostramos cómo prepararlo y dónde llevarlo.
-      </p>
+      <Guidance kind={valid} />
     </>
   );
 }
