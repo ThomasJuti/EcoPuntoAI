@@ -42,20 +42,20 @@ Chain strategy: stacked-to-main
 
 ## Phase 3: Auth and Storage (PR 3)
 
-- [ ] 3.1 RED: unauthenticated upload to Storage is denied (401)
-- [ ] 3.2 Add Supabase SSR clients in `lib/supabase/client.ts` and `lib/supabase/server.ts`
-- [ ] 3.3 Enable Google provider and session callback in `app/auth/callback/route.ts`
-- [ ] 3.4 Create `profiles` with `is_admin` allowlist including `thomasjuti1210@gmail.com` in `supabase/migrations/0001_profiles.sql`
-- [ ] 3.5 Private bucket `{user_id}/*` in `supabase/migrations/0002_storage.sql`
-- [ ] 3.6 Gate Escanear behind Google; keep landing, in-app Inicio, Aprende, and map read public
+- [x] 3.1 RED: unauthenticated upload to Storage is denied (401)
+- [x] 3.2 Add Supabase SSR clients in `lib/supabase/client.ts` and `lib/supabase/server.ts`
+- [x] 3.3 Enable Google provider and session callback in `app/auth/callback/route.ts`
+- [x] 3.4 Create `profiles` with `is_admin` allowlist including `thomasjuti1210@gmail.com` in `supabase/migrations/0001_profiles.sql`
+- [x] 3.5 Private bucket `{user_id}/*` in `supabase/migrations/0002_storage.sql`
+- [x] 3.6 Gate Escanear behind Google; keep landing, in-app Inicio, Aprende, and map read public
 
 ## Phase 4: Identify (PR 4)
 
-- [ ] 4.1 Add catalog IDs and labels in `data/seed/device-types.json`
-- [ ] 4.2 RED: low-confidence Gemini result maps to `unknown` (no invented name)
-- [ ] 4.3 Implement `lib/vision/identify.ts` mapping Gemini → `WasteKind`
-- [ ] 4.4 Camera + gallery capture in `app/(identif)/escanear/page.tsx` uploading to private Storage
-- [ ] 4.5 Result + correction UI in `app/(identif)/resultado/page.tsx`
+- [x] 4.1 Add catalog IDs and labels in `data/seed/device-types.json`
+- [x] 4.2 RED: low-confidence Gemini result maps to `unknown` (no invented name)
+- [x] 4.3 Implement `lib/vision/identify.ts` mapping Gemini → `WasteKind`
+- [x] 4.4 Camera + gallery capture in `app/(identif)/escanear/page.tsx` uploading to private Storage
+- [x] 4.5 Result + correction UI in `app/(identif)/resultado/page.tsx`
 
 ## Phase 5: Guidance (PR 5)
 
