@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { setLocale } from "@/app/i18n/actions";
-import type { Locale } from "@/lib/i18n/locale";
+import { LOCALE_COOKIE, type Locale } from "@/lib/i18n/locale";
 
 type Props = {
   locale: Locale;
@@ -15,23 +16,37 @@ const OPTIONS: { code: Locale; short: string }[] = [
 ];
 
 const SEGMENT =
-  "h-full place-items-center rounded-full px-2.5 transition-colors duration-100 motion-reduce:transition-none sm:px-3";
+  "h-full place-items-center rounded-full px-2.5 sm:px-3";
+
+function writeLocaleCookie(locale: Locale) {
+  document.cookie = `${LOCALE_COOKIE}=${locale};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
+}
 
 export function LocaleToggle({ locale, label }: Props) {
   const router = useRouter();
-  const next: Locale = locale === "es" ? "en" : "es";
+  const [current, setCurrent] = useState(locale);
+
+  useEffect(() => {
+    setCurrent(locale);
+  }, [locale]);
+
+  function switchLocale() {
+    const next: Locale = current === "es" ? "en" : "es";
+    setCurrent(next);
+    writeLocaleCookie(next);
+    void setLocale(next);
+    router.refresh();
+  }
 
   return (
     <button
       type="button"
       aria-label={label}
-      onClick={() => {
-        void setLocale(next).then(() => router.refresh());
-      }}
+      onClick={switchLocale}
       className="liquid-glass inline-flex h-11 shrink-0 items-center gap-0.5 rounded-full p-1 text-xs font-semibold tracking-wide transition duration-100 ease-[var(--ease-out)] hover:bg-white/40 active:scale-[0.97] sm:h-12 motion-reduce:transition-none motion-reduce:active:scale-100"
     >
       {OPTIONS.map(({ code, short }) => {
-        const active = locale === code;
+        const active = current === code;
         return (
           <span
             key={code}

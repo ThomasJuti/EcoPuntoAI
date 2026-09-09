@@ -56,10 +56,8 @@ export function AppNav({
               href={link.href}
               aria-current={active ? "page" : undefined}
               aria-label={label}
-              className={`flex items-center gap-1.5 rounded-full px-2.5 py-2 text-sm transition duration-100 ease-[var(--ease-out)] hover:bg-white/40 active:scale-[0.97] sm:px-4 ${
-                active
-                  ? "bg-white/40 font-medium text-petroleum"
-                  : "text-petroleum/70 hover:text-petroleum"
+              className={`flex items-center gap-1.5 rounded-full px-2.5 py-2 text-sm text-petroleum/70 transition duration-200 hover:bg-white/40 hover:text-petroleum sm:px-4 ${
+                active ? "bg-white/40 font-medium text-petroleum" : ""
               }`}
             >
               <Icon size={18} weight={active ? "fill" : "regular"} />
