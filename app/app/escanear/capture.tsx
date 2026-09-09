@@ -4,15 +4,13 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Camera, ImageSquare, SpinnerGap, WarningCircle } from "@phosphor-icons/react";
 import { isWasteKind } from "@/lib/catalog/kinds";
+import type { Messages } from "@/lib/i18n/messages";
 
 type Status = "idle" | "uploading" | "identifying" | "error";
 
-const STATUS_COPY: Record<Exclude<Status, "idle" | "error">, string> = {
-  uploading: "Subiendo la foto…",
-  identifying: "Identificando el aparato…",
-};
+type Props = { copy: Messages["capture"] };
 
-export function Capture() {
+export function Capture({ copy }: Props) {
   const router = useRouter();
   const cameraRef = useRef<HTMLInputElement>(null);
   const galleryRef = useRef<HTMLInputElement>(null);
@@ -56,7 +54,7 @@ export function Capture() {
       router.push(`/app/resultado?${params.toString()}`);
     } catch {
       setStatus("error");
-      setError("No pudimos procesar la foto. Intenta de nuevo.");
+      setError(copy.error);
     }
   }
 
@@ -78,7 +76,7 @@ export function Capture() {
         accept="image/*"
         capture="environment"
         className="sr-only"
-        aria-label="Tomar una foto con la cámara"
+        aria-label={copy.photoAria}
         onChange={onPick}
       />
       <input
@@ -86,7 +84,7 @@ export function Capture() {
         type="file"
         accept="image/*"
         className="sr-only"
-        aria-label="Elegir una foto de la galería"
+        aria-label={copy.galleryAria}
         onChange={onPick}
       />
 
@@ -98,7 +96,7 @@ export function Capture() {
           className={`liquid-glass-strong ${buttonBase}`}
         >
           <Camera size={20} weight="fill" />
-          Tomar foto
+          {copy.photo}
         </button>
         <button
           type="button"
@@ -107,7 +105,7 @@ export function Capture() {
           className={`liquid-glass ${buttonBase}`}
         >
           <ImageSquare size={20} weight="regular" />
-          Subir de la galería
+          {copy.gallery}
         </button>
       </div>
 
@@ -115,7 +113,7 @@ export function Capture() {
         {busy && (
           <p className="inline-flex items-center gap-2 text-sm text-petroleum/70">
             <SpinnerGap size={16} className="animate-spin motion-reduce:animate-none" />
-            {STATUS_COPY[status as "uploading" | "identifying"]}
+            {status === "uploading" ? copy.uploading : copy.identifying}
           </p>
         )}
         {status === "error" && error && (

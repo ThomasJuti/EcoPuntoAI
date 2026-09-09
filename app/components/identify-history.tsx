@@ -22,6 +22,8 @@ import {
   listIdentifications,
   type IdentificationRecord,
 } from "@/lib/identify/history";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { messages } from "@/lib/i18n/messages";
 import { createClient, resolveSessionUser } from "@/lib/supabase/server";
 
 const KIND_ICONS = {
@@ -41,16 +43,22 @@ const KIND_ICONS = {
   unknown: Question,
 };
 
-const dateFormat = new Intl.DateTimeFormat("es-CO", {
+const dateFormatEs = new Intl.DateTimeFormat("es-CO", {
   day: "numeric",
   month: "short",
   year: "numeric",
 });
 
-function formatWhen(iso: string): string {
+const dateFormatEn = new Intl.DateTimeFormat("en-US", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+
+function formatWhen(iso: string, locale: "es" | "en"): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "";
-  return dateFormat.format(date);
+  return (locale === "en" ? dateFormatEn : dateFormatEs).format(date);
 }
 
 function confidencePct(confidence: number): number | null {
@@ -77,12 +85,14 @@ function EmptyCard({ title, hint }: { title: string; hint: string }) {
 }
 
 export async function IdentifyHistory() {
+  const locale = await getLocale();
+  const t = messages[locale].history;
   const user = await resolveSessionUser();
   if (!user) {
     return (
       <EmptyCard
-        title="Entra con Google para ver tu historial."
-        hint="Identificar pide sesión; ahí se guarda cada aparato."
+        title={t.signInTitle}
+        hint={t.signInHint}
       />
     );
   }
@@ -91,8 +101,8 @@ export async function IdentifyHistory() {
   if (records.length === 0) {
     return (
       <EmptyCard
-        title="Todavía no identificas ningún aparato."
-        hint="Toma o sube una foto para escanear tu primer electrónico."
+        title={t.emptyTitle}
+        hint={t.emptyHint}
       />
     );
   }
@@ -101,7 +111,7 @@ export async function IdentifyHistory() {
     <ul className="space-y-3">
       {records.map((record) => {
         const KindIcon = KIND_ICONS[record.kind];
-        const when = formatWhen(record.at);
+        const when = formatWhen(record.at, locale);
         const pct =
           record.kind !== "unknown" ? confidencePct(record.confidence) : null;
         const answered = formatAnsweredConditions(record.answers);
@@ -120,7 +130,7 @@ export async function IdentifyHistory() {
                 </span>
                 <span className="mt-0.5 block text-sm text-petroleum/55">
                   {when}
-                  {pct !== null && ` · ${pct}% de confianza`}
+                  {pct !== null && ` · ${pct}% ${t.confidence}`}
                 </span>
                 {answered.length > 0 && (
                   <span className="mt-1.5 block text-sm leading-relaxed text-petroleum/70">

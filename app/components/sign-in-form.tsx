@@ -23,7 +23,13 @@ function GoogleMark() {
   );
 }
 
-export function SignInForm({ next }: { next: string }) {
+export function SignInForm({
+  next,
+  label = "Continuar con Google",
+}: {
+  next: string;
+  label?: string;
+}) {
   return (
     <form action={signInWithGoogle}>
       <input type="hidden" name="next" value={next} />
@@ -32,7 +38,7 @@ export function SignInForm({ next }: { next: string }) {
         className="liquid-glass-strong inline-flex items-center gap-2.5 rounded-full px-8 py-4 text-base font-medium text-petroleum transition duration-200 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
       >
         <GoogleMark />
-        Continuar con Google
+        {label}
       </button>
     </form>
   );

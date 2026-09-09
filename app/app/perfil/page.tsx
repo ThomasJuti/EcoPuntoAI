@@ -4,12 +4,17 @@ import { Flag, MapPin, SignOut, User } from "@phosphor-icons/react/dist/ssr";
 import { signOut } from "@/app/auth/actions";
 import { SignInForm } from "@/app/components/sign-in-form";
 import { getProfile } from "@/lib/auth/admin";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { messages } from "@/lib/i18n/messages";
 
-export const metadata: Metadata = {
-  title: "Perfil - EcoPunto IA",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return { title: messages[locale].profile.metaTitle };
+}
 
 export default async function PerfilPage() {
+  const locale = await getLocale();
+  const t = messages[locale];
   const { user, isAdmin } = await getProfile();
 
   if (!user) {
@@ -19,13 +24,13 @@ export default async function PerfilPage() {
           <User size={24} weight="regular" />
         </div>
         <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
-          Perfil
+          {t.profile.title}
         </h1>
         <p className="mt-3 max-w-[52ch] text-lg font-light leading-relaxed text-petroleum/70">
-          Entra con Google. No hay usuario ni contraseña.
+          {t.profile.lede}
         </p>
         <div className="mt-8">
-          <SignInForm next="/app/perfil" />
+          <SignInForm next="/app/perfil" label={t.signIn.google} />
         </div>
       </main>
     );
@@ -37,7 +42,7 @@ export default async function PerfilPage() {
   return (
     <main className="flex min-h-[62dvh] flex-col justify-center">
       <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
-        Perfil
+        {t.profile.title}
       </h1>
       <section className="liquid-glass mt-10 flex max-w-lg items-center gap-5 rounded-3xl p-6">
         {user.avatarUrl ? (
@@ -59,7 +64,7 @@ export default async function PerfilPage() {
         )}
         <div className="min-w-0">
           <p className="text-xs tracking-wide text-petroleum/55">
-            Sesión con Google
+            {t.profile.session}
           </p>
           <p className="mt-1 truncate text-lg font-medium text-petroleum">
             {user.name || email}
@@ -76,14 +81,14 @@ export default async function PerfilPage() {
             className="liquid-glass inline-flex items-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium text-petroleum/80 transition duration-200 ease-[var(--ease-out)] hover:bg-white/40 hover:text-petroleum active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
           >
             <MapPin size={16} weight="regular" />
-            Puntos
+            {t.profile.points}
           </Link>
           <Link
             href="/app/admin/reportes"
             className="liquid-glass inline-flex items-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium text-petroleum/80 transition duration-200 ease-[var(--ease-out)] hover:bg-white/40 hover:text-petroleum active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
           >
             <Flag size={16} weight="regular" />
-            Reportes
+            {t.profile.reports}
           </Link>
         </nav>
       )}
@@ -93,7 +98,7 @@ export default async function PerfilPage() {
           className="liquid-glass inline-flex items-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium text-petroleum/80 transition duration-200 ease-[var(--ease-out)] hover:bg-white/40 hover:text-petroleum active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
         >
           <SignOut size={16} weight="regular" />
-          Cerrar sesión
+          {t.profile.signOut}
         </button>
       </form>
     </main>
