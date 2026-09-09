@@ -8,12 +8,9 @@ import {
   Flag,
   SpinnerGap,
 } from "@phosphor-icons/react";
-import {
-  REPORT_REASONS,
-  REPORT_REASON_LABELS,
-  type ReportReason,
-} from "@/lib/catalog/reports";
+import { REPORT_REASONS, type ReportReason } from "@/lib/catalog/reports";
 import { SignInForm } from "@/app/components/sign-in-form";
+import { useMessages } from "./locale-provider";
 
 type Props = {
   pointId: string;
@@ -31,6 +28,7 @@ const btnBase =
   "inline-flex items-center gap-1.5 rounded-full text-sm font-medium transition duration-100 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100";
 
 export function ReportPoint({ pointId, pointName }: Props) {
+  const t = useMessages();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<ReportReason>("closed");
@@ -64,10 +62,10 @@ export function ReportPoint({ pointId, pointName }: Props) {
       } | null;
       setStatus({
         type: "error",
-        message: json?.error ?? "No pudimos enviar el reporte.",
+        message: json?.error ?? t.report.sendError,
       });
     } catch {
-      setStatus({ type: "error", message: "No pudimos enviar el reporte." });
+      setStatus({ type: "error", message: t.report.sendError });
     }
   }
 
@@ -78,7 +76,7 @@ export function ReportPoint({ pointId, pointName }: Props) {
         className="flex items-start gap-2 text-sm font-medium text-pine-600"
       >
         <CheckCircle size={16} weight="fill" className="mt-0.5 shrink-0" />
-        Gracias. El punto sigue visible hasta que el equipo lo revise.
+        {t.report.thanks}
       </p>
     );
   }
@@ -92,7 +90,7 @@ export function ReportPoint({ pointId, pointName }: Props) {
         className={`${btnBase} px-4 py-2 text-petroleum/60 hover:bg-white/40 hover:text-petroleum`}
       >
         <Flag size={14} weight="regular" />
-        Reportar un dato
+        {t.report.action}
       </button>
     );
   }
@@ -115,16 +113,16 @@ export function ReportPoint({ pointId, pointName }: Props) {
       {status.type === "unauthenticated" ? (
         <div className="mt-4">
           <p className="text-sm text-petroleum/70">
-            Entra con Google para reportar.
+            {t.report.signIn}
           </p>
           <div className="mt-3">
-            <SignInForm next={pathname} />
+            <SignInForm next={pathname} label={t.signIn.google} />
           </div>
         </div>
       ) : (
         <form onSubmit={submit} className="mt-4">
           <fieldset>
-            <legend className="sr-only">Motivo del reporte</legend>
+            <legend className="sr-only">{t.report.reasonLegend}</legend>
             <div className="space-y-2">
               {REPORT_REASONS.map((value) => (
                 <label
@@ -139,7 +137,7 @@ export function ReportPoint({ pointId, pointName }: Props) {
                     onChange={() => setReason(value)}
                     className="size-4 accent-pine-600"
                   />
-                  {REPORT_REASON_LABELS[value]}
+                  {t.report.reasons[value]}
                 </label>
               ))}
             </div>
@@ -149,7 +147,7 @@ export function ReportPoint({ pointId, pointName }: Props) {
             htmlFor={`report-comment-${pointId}`}
             className="mt-4 block text-xs font-medium tracking-wide text-petroleum/55 uppercase"
           >
-            Comentario (opcional)
+            {t.report.comment}
           </label>
           <textarea
             id={`report-comment-${pointId}`}
@@ -157,7 +155,7 @@ export function ReportPoint({ pointId, pointName }: Props) {
             onChange={(event) => setComment(event.target.value)}
             rows={2}
             maxLength={280}
-            placeholder="Ej. cambió de dirección hace un mes"
+            placeholder={t.report.commentPlaceholder}
             className="liquid-glass-strong mt-2 w-full resize-none rounded-2xl px-4 py-2.5 text-sm text-petroleum placeholder:text-petroleum/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-pine-600/50"
           />
 
@@ -179,7 +177,7 @@ export function ReportPoint({ pointId, pointName }: Props) {
                 className="animate-spin motion-reduce:animate-none"
               />
             )}
-            {status.type === "sending" ? "Enviando…" : "Enviar reporte"}
+            {status.type === "sending" ? t.report.sending : t.report.send}
           </button>
         </form>
       )}

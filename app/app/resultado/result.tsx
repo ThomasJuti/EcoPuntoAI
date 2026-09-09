@@ -20,14 +20,15 @@ import {
   type Icon,
 } from "@phosphor-icons/react";
 import {
-  WASTE_KINDS,
   blurbFor,
   isWasteKind,
   labelFor,
+  wasteKinds,
   type WasteKind,
 } from "@/lib/catalog/kinds";
 import type { Conditions } from "@/lib/catalog/conditions";
 import { RecommendedPointModal } from "@/app/components/recommended-point-modal";
+import { useLocale, useMessages } from "@/app/components/locale-provider";
 import { Guidance } from "./guidance";
 import { ResultBackButton } from "./result-back-button";
 
@@ -58,6 +59,9 @@ type Props = {
 export function Result({ kind, confidence, path, answers = {} }: Props) {
   const router = useRouter();
   const [mapOpen, setMapOpen] = useState(false);
+  const locale = useLocale();
+  const t = useMessages();
+  const kinds = wasteKinds(locale);
 
   const valid: WasteKind = kind && isWasteKind(kind) ? kind : "unknown";
   const mustPick = valid === "unknown";
@@ -95,17 +99,17 @@ export function Result({ kind, confidence, path, answers = {} }: Props) {
       </div>
 
       <p className="text-xs font-medium tracking-wide text-petroleum/55 uppercase">
-        {mustPick ? "No lo tenemos claro" : "Identificamos"}
+        {mustPick ? t.result.unclear : t.result.identified}
       </p>
       <h1 className="mt-2 font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
-        {labelFor(valid)}
+        {labelFor(valid, locale)}
       </h1>
       <p className="mt-3 max-w-[52ch] text-lg font-light leading-relaxed text-petroleum/70">
-        {blurbFor(valid)}
+        {blurbFor(valid, locale)}
       </p>
       {!mustPick && confidencePct !== null && (
         <p className="mt-2 text-sm text-petroleum/55">
-          Confianza: {confidencePct}%
+          {t.result.confidence}: {confidencePct}%
         </p>
       )}
 
@@ -114,7 +118,7 @@ export function Result({ kind, confidence, path, answers = {} }: Props) {
           htmlFor="kind"
           className="text-xs font-medium tracking-wide text-petroleum/55 uppercase"
         >
-          {mustPick ? "Elige la categoría" : "¿No es? Corrige la categoría"}
+          {mustPick ? t.result.pick : t.result.correct}
         </label>
         <select
           id="kind"
@@ -122,7 +126,7 @@ export function Result({ kind, confidence, path, answers = {} }: Props) {
           onChange={onCorrect}
           className="liquid-glass-strong mt-3 w-full appearance-none rounded-full px-5 py-3 text-base font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-pine-600/50 motion-reduce:transition-none"
         >
-          {WASTE_KINDS.map((k) => (
+          {kinds.map((k) => (
             <option key={k.id} value={k.id}>
               {k.label}
             </option>

@@ -6,14 +6,18 @@ import { getProfile } from "@/lib/auth/admin";
 import { createClient } from "@/lib/supabase/server";
 import type { PointReport, ReportReason } from "@/lib/catalog/reports";
 import { isReportReason } from "@/lib/catalog/reports";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { messages } from "@/lib/i18n/messages";
 import { ReportsAdmin } from "./reports-admin";
 
-export const metadata: Metadata = {
-  title: "Reportes de puntos - EcoPunto IA",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return { title: messages[locale].admin.reportsMeta };
+}
 
 export default async function AdminReportesPage() {
   const { user, isAdmin } = await getProfile();
+  const t = messages[await getLocale()];
 
   if (!user) {
     return (
@@ -22,13 +26,13 @@ export default async function AdminReportesPage() {
           <User size={24} weight="regular" />
         </div>
         <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
-          Reportes
+          {t.profile.reports}
         </h1>
         <p className="mt-3 max-w-[52ch] text-lg font-light leading-relaxed text-petroleum/70">
-          Entra con Google. No hay usuario ni contraseña.
+          {t.profile.lede}
         </p>
         <div className="mt-8">
-          <SignInForm next="/app/admin/reportes" />
+          <SignInForm next="/app/admin/reportes" label={t.signIn.google} />
         </div>
       </main>
     );
@@ -41,17 +45,17 @@ export default async function AdminReportesPage() {
           <ShieldWarning size={24} weight="regular" />
         </div>
         <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
-          Reportes
+          {t.profile.reports}
         </h1>
         <p className="mt-3 max-w-[52ch] text-lg font-light leading-relaxed text-petroleum/70">
-          No tienes acceso.
+          {t.admin.noAccess}
         </p>
         <div className="mt-8">
           <Link
             href="/app"
             className="liquid-glass-strong inline-flex items-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium text-petroleum transition duration-200 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
           >
-            Volver a la app
+            {t.admin.backApp}
           </Link>
         </div>
       </main>
@@ -84,19 +88,14 @@ export default async function AdminReportesPage() {
   return (
     <main>
       <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
-        Reportes
+        {t.profile.reports}
       </h1>
       <p className="mt-3 max-w-[52ch] text-lg font-light leading-relaxed text-petroleum/70">
-        Datos reportados por la gente. Los puntos siguen visibles hasta que el
-        equipo los revise.
+        {t.admin.reportsLede}
       </p>
       <ReportsAdmin
         initialReports={reports}
-        warning={
-          error
-            ? "Aplica supabase/migrations/0004_reports.sql en el SQL editor de Supabase."
-            : undefined
-        }
+        warning={error ? t.admin.reportsWarning : undefined}
       />
     </main>
   );

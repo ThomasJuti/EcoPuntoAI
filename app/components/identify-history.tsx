@@ -114,7 +114,7 @@ export async function IdentifyHistory() {
         const when = formatWhen(record.at, locale);
         const pct =
           record.kind !== "unknown" ? confidencePct(record.confidence) : null;
-        const answered = formatAnsweredConditions(record.answers);
+        const answered = formatAnsweredConditions(record.answers, locale);
         return (
           <li key={record.path}>
             <Link
@@ -126,7 +126,7 @@ export async function IdentifyHistory() {
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-base font-medium text-petroleum">
-                  {labelFor(record.kind)}
+                  {labelFor(record.kind, locale)}
                 </span>
                 <span className="mt-0.5 block text-sm text-petroleum/55">
                   {when}

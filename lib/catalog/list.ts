@@ -1,6 +1,7 @@
 import { isWasteKind, type WasteKind } from "@/lib/catalog/kinds";
 import { rankPoints, type CollectionPoint, type RankedPoint } from "@/lib/catalog/ranking";
 import { BOGOTA_CENTER, geocodeLocality, isInBogota } from "@/lib/geo/bogota";
+import type { Locale } from "@/lib/i18n/locale";
 
 export type PointsOrigin =
   | { type: "gps"; lat: number; lng: number }
@@ -35,26 +36,30 @@ export function listPoints(
   catalog: CollectionPoint[],
   kind: WasteKind,
   origin: PointsOrigin,
+  locale: Locale = "es",
 ): PointsList | { error: string } {
+  const en = locale === "en";
   if (origin.type === "gps") {
     if (!isInBogota(origin.lat, origin.lng)) {
-      return { error: "Fuera de Bogotá" };
+      return { error: en ? "Outside Bogotá" : "Fuera de Bogotá" };
     }
     return {
-      originLabel: "tu ubicación",
+      originLabel: en ? "your location" : "tu ubicación",
       points: rankPoints(catalog, kind, origin),
     };
   }
   if (origin.type === "locality") {
     const hit = geocodeLocality(origin.locality);
-    if (!hit) return { error: "Localidad no encontrada" };
+    if (!hit) {
+      return { error: en ? "Neighborhood not found" : "Localidad no encontrada" };
+    }
     return {
       originLabel: hit.name,
       points: rankPoints(catalog, kind, hit),
     };
   }
   return {
-    originLabel: "centro de Bogotá",
+    originLabel: en ? "Bogotá center" : "centro de Bogotá",
     points: rankPoints(catalog, kind, BOGOTA_CENTER),
   };
 }

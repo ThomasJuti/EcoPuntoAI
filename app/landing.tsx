@@ -11,6 +11,8 @@ import {
 import { FadingStill } from "./components/fading-still";
 import { BlurText } from "./components/blur-text";
 import { ArrowUpRight, ClockIcon } from "./components/icons";
+import { LocaleToggle } from "./components/locale-toggle";
+import { useLocale, useMessages } from "./components/locale-provider";
 
 const HERO_IMAGES = [
   "/images/still-cables.webp",
@@ -34,34 +36,10 @@ function RecycleMancha() {
   );
 }
 
-const CARDS = [
-  {
-    n: "01",
-    offset: "md:col-span-7",
-    radius: "rounded-[2rem]",
-    icon: Camera,
-    title: "Identificar",
-    tags: "Foto · cámara · galería",
-    body: "Fotografía el aparato o súbelo desde tu galería. Si la app se equivoca, lo corriges con un toque y seguimos.",
-  },
-  {
-    n: "02",
-    offset: "md:col-span-7 md:col-start-6",
-    radius: "rounded-3xl",
-    icon: Recycle,
-    title: "Orientar",
-    tags: "Riesgos · reusar · reparar",
-    body: "Te decimos qué hacer y qué no: si todavía sirve para reusar o reparar, y por qué las pilas jamás van a la caneca de la casa.",
-  },
-  {
-    n: "03",
-    offset: "md:col-span-7 md:col-start-3",
-    radius: "rounded-[1.75rem]",
-    icon: MapPin,
-    title: "Llevar",
-    tags: "Bogotá · horarios · cómo llegar",
-    body: "Puntos de Bogotá que sí reciben ese tipo de residuo, con horarios y la ruta lista para abrir en Google Maps.",
-  },
+const CARD_LAYOUT = [
+  { n: "01", offset: "md:col-span-7", radius: "rounded-[2rem]", icon: Camera },
+  { n: "02", offset: "md:col-span-7 md:col-start-6", radius: "rounded-3xl", icon: Recycle },
+  { n: "03", offset: "md:col-span-7 md:col-start-3", radius: "rounded-[1.75rem]", icon: MapPin },
 ];
 
 function Reveal({
@@ -90,6 +68,8 @@ function Reveal({
 
 function Navbar() {
   const reduce = useReducedMotion();
+  const locale = useLocale();
+  const t = useMessages();
   return (
     <motion.header
       className="fixed inset-x-0 top-4 z-50 flex items-center justify-between px-6 lg:px-16"
@@ -100,7 +80,7 @@ function Navbar() {
       <Link
         href="/"
         aria-current="page"
-        aria-label="EcoPunto IA - inicio"
+        aria-label={t.landing.homeAria}
         className="liquid-glass grid h-12 w-12 place-items-center rounded-full text-petroleum transition duration-200 hover:bg-white/40 active:scale-[0.98]"
       >
         <span className="font-heading text-2xl italic">e</span>
@@ -110,33 +90,37 @@ function Navbar() {
           href="#pasos"
           className="rounded-full px-4 py-2 text-sm text-petroleum/70 transition duration-200 hover:bg-white/40 hover:text-petroleum"
         >
-          Cómo
+          {t.landing.how}
         </a>
         <a
           href="#capacidades"
           className="rounded-full px-4 py-2 text-sm text-petroleum/70 transition duration-200 hover:bg-white/40 hover:text-petroleum"
         >
-          Capacidades
+          {t.landing.capabilities}
         </a>
       <Link
         href="/app"
         className="group liquid-glass-strong ml-1 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-petroleum transition duration-200 hover:bg-white/50 active:scale-[0.98]"
       >
-          Abrir la app
+          {t.landing.openApp}
           <ArrowUpRight className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" width={16} height={16} />
         </Link>
       </nav>
-      <Link
-        href="/app"
-        className="liquid-glass-strong inline-flex h-12 items-center rounded-full px-4 text-sm font-semibold text-petroleum transition duration-200 hover:bg-white/50 active:scale-[0.98] md:hidden"
-      >
-        Abrir
-      </Link>
+      <div className="flex items-center gap-2">
+        <LocaleToggle locale={locale} label={t.nav.language} />
+        <Link
+          href="/app"
+          className="liquid-glass-strong inline-flex h-12 items-center rounded-full px-4 text-sm font-semibold text-petroleum transition duration-200 hover:bg-white/50 active:scale-[0.98] md:hidden"
+        >
+          {t.landing.open}
+        </Link>
+      </div>
     </motion.header>
   );
 }
 
 function Hero() {
+  const t = useMessages();
   return (
     <section className="relative overflow-hidden bg-white">
       <FadingStill
@@ -154,14 +138,14 @@ function Hero() {
         <h1 className="max-w-[13ch] pb-1 font-heading text-6xl font-normal italic leading-[1.05] tracking-[-0.04em] text-petroleum [text-shadow:0_0_28px_#fff,0_0_8px_#fff] md:text-7xl lg:text-[5.25rem]">
           <BlurText
             className="justify-start"
-            text="Qué es, y a dónde va en Bogotá"
+            text={t.landing.hero}
+            key={t.landing.hero}
           />
         </h1>
 
         <Reveal delay={0.35}>
           <p className="mt-6 max-w-[36ch] text-lg font-light leading-relaxed text-petroleum">
-            EcoPunto IA identifica tu electrónico con una foto y te muestra
-            puntos de entrega en Bogotá que sí reciben ese residuo.
+            {t.landing.lede}
           </p>
         </Reveal>
 
@@ -171,14 +155,14 @@ function Hero() {
               href="/app"
               className="group liquid-glass-strong inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-base font-medium text-petroleum transition duration-200 hover:bg-white/50 active:scale-[0.98]"
             >
-              Abrir la app
+              {t.landing.openApp}
               <ArrowUpRight className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" width={18} height={18} />
             </Link>
             <a
               href="#capacidades"
               className="liquid-glass inline-flex items-center rounded-full px-7 py-3.5 text-base font-medium text-petroleum/80 transition duration-200 hover:bg-white/40 active:scale-[0.98]"
             >
-              Ver capacidades
+              {t.landing.seeCapabilities}
             </a>
           </div>
         </Reveal>
@@ -190,16 +174,16 @@ function Hero() {
           >
             <div>
               <ClockIcon className="text-pine-600" />
-              <p className="mt-4 text-lg font-medium text-petroleum">3 pasos</p>
+              <p className="mt-4 text-lg font-medium text-petroleum">{t.landing.threeSteps}</p>
               <p className="mt-1 max-w-[28ch] text-sm font-light text-petroleum/70">
-                Foto, identificación y punto de entrega
+                {t.landing.threeStepsLede}
               </p>
             </div>
             <div>
               <MapPin className="text-pine-600" size={24} weight="regular" />
               <p className="mt-4 text-lg font-medium text-petroleum">Bogotá</p>
               <p className="mt-1 max-w-[28ch] text-sm font-light text-petroleum/70">
-                Puntos que reciben el tipo de aparato, no solo el más cercano
+                {t.landing.bogotaLede}
               </p>
             </div>
           </div>
@@ -211,6 +195,11 @@ function Hero() {
 
 function Capabilities() {
   const reduce = useReducedMotion();
+  const t = useMessages();
+  const cards = CARD_LAYOUT.map((layout, i) => ({
+    ...layout,
+    ...t.landing.cards[i],
+  }));
   return (
     <section id="capacidades" className="relative overflow-hidden bg-white">
       <RecycleMancha />
@@ -224,7 +213,7 @@ function Capabilities() {
           viewport={{ once: true, amount: 0.6 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          Capacidades
+          {t.landing.capabilities}
         </motion.p>
         <motion.h2
           className="mt-3 max-w-[14ch] font-heading text-5xl font-normal italic leading-[1.08] text-petroleum md:text-6xl"
@@ -233,11 +222,11 @@ function Capabilities() {
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.7, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
         >
-          Del cajón al punto correcto
+          {t.landing.capabilitiesTitle}
         </motion.h2>
 
         <div className="mt-16 grid gap-5 md:grid-cols-12">
-          {CARDS.map((card, i) => (
+          {cards.map((card, i) => (
             <motion.article
               key={card.title}
               className={`liquid-glass flex flex-col p-6 md:min-h-[300px] ${card.radius} ${card.offset}`}
@@ -278,13 +267,14 @@ function Capabilities() {
 }
 
 export function Landing() {
+  const t = useMessages();
   return (
     <main className="grain bg-white text-petroleum">
       <a
         href="#contenido"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-full focus:bg-white focus:px-4 focus:py-2"
       >
-        Saltar al contenido
+        {t.landing.skip}
       </a>
       <Navbar />
       <Hero />
@@ -307,7 +297,7 @@ export function Landing() {
             href="/app"
             className="group inline-flex items-center gap-1.5 text-sm font-medium text-petroleum transition duration-200 hover:text-pine-600"
           >
-            Abrir la app
+            {t.landing.openApp}
             <ArrowUpRight className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" width={16} height={16} />
           </Link>
         </motion.div>

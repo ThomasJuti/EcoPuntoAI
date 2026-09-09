@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { messages } from "@/lib/i18n/messages";
 
 /**
  * Barra de pulso para skeletons. Decorativa: siempre va dentro de un
@@ -17,10 +19,11 @@ export function Pulse({ className = "" }: { className?: string }) {
  * Envoltura accesible para estados de carga: anuncia "Cargando…" y oculta
  * los bloques decorativos del lector de pantalla.
  */
-export function LoadingShell({ children }: { children: ReactNode }) {
+export async function LoadingShell({ children }: { children: ReactNode }) {
+  const locale = await getLocale();
   return (
     <main aria-busy="true">
-      <span className="sr-only">Cargando…</span>
+      <span className="sr-only">{messages[locale].common.loading}</span>
       <div aria-hidden="true">{children}</div>
     </main>
   );

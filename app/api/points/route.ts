@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { kindFromParam, listPoints, originFromParams } from "@/lib/catalog/list";
 import { loadPoints } from "@/lib/catalog/points";
+import { getLocale } from "@/lib/i18n/get-locale";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -13,6 +14,7 @@ export async function GET(request: Request) {
       lng: url.searchParams.get("lng"),
       locality: url.searchParams.get("locality"),
     }),
+    await getLocale(),
   );
   if ("error" in listed) {
     return NextResponse.json({ error: listed.error }, { status: 400 });

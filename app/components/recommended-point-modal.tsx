@@ -11,6 +11,8 @@ import {
 } from "@phosphor-icons/react";
 import type { WasteKind } from "@/lib/catalog/kinds";
 import { embedMapUrl, mapsUrl, type RankedPoint } from "@/lib/catalog/ranking";
+import { formatPointHours } from "@/lib/i18n/hours";
+import { useLocale, useMessages } from "./locale-provider";
 
 type Props = {
   kind: WasteKind;
@@ -23,23 +25,28 @@ type FetchState =
   | { status: "error" }
   | { status: "ready"; originLabel: string; point: RankedPoint };
 
-const kmFormat = new Intl.NumberFormat("es-CO", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
-
 const btnBase =
   "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition duration-100 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100";
 
-function nearLabel(originLabel: string) {
-  return originLabel === "centro de Bogotá"
-    ? "Cerca del centro de Bogotá"
-    : `Cerca de ${originLabel}`;
+function nearLabel(
+  originLabel: string,
+  copy: { nearCenter: string; nearNamed: string },
+) {
+  if (originLabel === "centro de Bogotá" || originLabel === "Bogotá center") {
+    return copy.nearCenter;
+  }
+  return copy.nearNamed.replace("{name}", originLabel);
 }
 
 export function RecommendedPointModal({ kind, open, onClose }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [state, setState] = useState<FetchState>({ status: "loading" });
+  const t = useMessages();
+  const locale = useLocale();
+  const kmFormat = new Intl.NumberFormat(locale === "en" ? "en-US" : "es-CO", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -74,7 +81,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
         }
         setState({
           status: "ready",
-          originLabel: data.originLabel ?? "centro de Bogotá",
+          originLabel: data.originLabel ?? (locale === "en" ? "Bogotá center" : "centro de Bogotá"),
           point: data.recommended,
         });
       } catch {
@@ -100,7 +107,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [open, kind]);
+  }, [open, kind, locale]);
 
   function onBackdropClick(event: React.MouseEvent<HTMLDialogElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -127,18 +134,18 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
             id="recommended-point-title"
             className="font-heading text-2xl font-normal italic leading-tight tracking-[-0.01em] text-petroleum"
           >
-            Dónde llevarlo
+            {t.recommended.title}
           </h2>
           <p className="mt-1 text-sm text-petroleum/60">
             {state.status === "ready"
-              ? nearLabel(state.originLabel)
-              : "Buscando el mejor punto…"}
+              ? nearLabel(state.originLabel, t.recommended)
+              : t.recommended.searching}
           </p>
         </div>
         <button
           type="button"
           onClick={() => dialogRef.current?.close()}
-          aria-label="Cerrar"
+          aria-label={t.common.close}
           className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-petroleum/5 text-petroleum/70 transition duration-100 ease-[var(--ease-out)] hover:bg-petroleum/10 hover:text-petroleum active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
         >
           <X size={16} weight="bold" />
@@ -150,7 +157,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
           role="status"
           className="mt-5 animate-pulse motion-reduce:animate-none"
         >
-          <span className="sr-only">Cargando punto recomendado…</span>
+          <span className="sr-only">{t.recommended.loading}</span>
           <div className="h-60 w-full rounded-2xl bg-petroleum/10" />
           <div className="mt-4 h-4 w-2/3 rounded-full bg-petroleum/10" />
           <div className="mt-2 h-3 w-1/2 rounded-full bg-petroleum/10" />
@@ -159,14 +166,14 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
 
       {state.status === "error" && (
         <p role="status" className="mt-5 text-sm text-petroleum/70">
-          No pudimos cargar el punto recomendado.
+          {t.recommended.error}
         </p>
       )}
 
       {state.status === "ready" && (
         <>
           <iframe
-            title={`Mapa de la zona de ${state.point.name}`}
+            title={t.recommended.mapTitle.replace("{name}", state.point.name)}
             src={embedMapUrl(state.point)}
             loading="lazy"
             className="mt-5 h-60 w-full rounded-2xl border-0 bg-petroleum/5"
@@ -177,7 +184,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
             </h3>
             <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-pine-600 px-2.5 py-1 text-xs font-medium text-white">
               <Star size={12} weight="fill" />
-              Recomendado
+              {t.point.recommended}
             </span>
           </div>
           <p className="mt-1 text-sm leading-relaxed text-petroleum/70">
@@ -190,12 +197,12 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
                 <strong className="font-semibold text-petroleum">
                   {kmFormat.format(state.point.km)} km
                 </strong>{" "}
-                de distancia
+                {t.point.distance}
               </span>
             </li>
             <li className="flex items-center gap-2">
               <Clock size={15} className="shrink-0 text-pine-600" />
-              {state.point.hours}
+              {formatPointHours(state.point.hours, locale)}
             </li>
           </ul>
         </>
@@ -209,7 +216,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
             rel="noopener noreferrer"
             className={`${btnBase} bg-pine-600 text-white hover:bg-pine-600/90`}
           >
-            Cómo llegar
+            {t.point.directions}
             <ArrowUpRight size={14} weight="bold" />
           </a>
         )}
@@ -217,7 +224,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
           href={`/app/puntos?kind=${kind}`}
           className={`${btnBase} bg-pine-600/10 text-pine-950 hover:bg-pine-600/15`}
         >
-          Ver más puntos
+          {t.recommended.more}
         </Link>
       </div>
     </dialog>

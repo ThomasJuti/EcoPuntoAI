@@ -35,3 +35,8 @@ test("swollen battery tightens storage and forbids puncture", () => {
   assert.equal(next.specialHandling, true);
   assert.equal(phone.canDonate, true);
 });
+
+test("English device-types keeps the same kind ids", () => {
+  assert.equal(deviceFor("phones", "en").id, "phones");
+  assert.match(deviceFor("unknown", "en").label, /know/i);
+});

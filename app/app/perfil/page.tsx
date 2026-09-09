@@ -75,7 +75,7 @@ export default async function PerfilPage() {
         </div>
       </section>
       {isAdmin && (
-        <nav aria-label="Administración" className="mt-6 flex flex-wrap gap-3">
+        <nav aria-label={t.profile.admin} className="mt-6 flex flex-wrap gap-3">
           <Link
             href="/app/admin/puntos"
             className="liquid-glass inline-flex items-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium text-petroleum/80 transition duration-200 ease-[var(--ease-out)] hover:bg-white/40 hover:text-petroleum active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"

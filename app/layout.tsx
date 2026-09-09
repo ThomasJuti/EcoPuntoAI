@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Barlow } from "next/font/google";
+import { LocaleProvider } from "@/app/components/locale-provider";
 import { getLocale } from "@/lib/i18n/get-locale";
+import { messages } from "@/lib/i18n/messages";
 import "./globals.css";
 
 const instrument = Instrument_Serif({
@@ -16,11 +18,14 @@ const barlow = Barlow({
   variable: "--font-barlow",
 });
 
-export const metadata: Metadata = {
-  title: "EcoPunto IA - Qué hacer con tus electrónicos viejos en Bogotá",
-  description:
-    "Le tomas una foto al aparato, la app lo identifica y te muestra dónde llevarlo en Bogotá.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const t = messages[locale].meta;
+  return {
+    title: t.title,
+    description: t.description,
+  };
+}
 
 export const viewport: Viewport = {
   viewportFit: "cover",
@@ -32,7 +37,9 @@ export default async function RootLayout({
   const locale = await getLocale();
   return (
     <html lang={locale} className={`${instrument.variable} ${barlow.variable}`}>
-      <body>{children}</body>
+      <body>
+        <LocaleProvider locale={locale}>{children}</LocaleProvider>
+      </body>
     </html>
   );
 }

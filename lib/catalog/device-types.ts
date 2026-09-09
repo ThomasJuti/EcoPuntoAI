@@ -1,5 +1,7 @@
-import catalog from "@/data/seed/device-types.json";
+import es from "@/data/seed/device-types.json";
+import en from "@/data/seed/device-types.en.json";
 import type { WasteKind } from "@/lib/catalog/kinds";
+import type { Locale } from "@/lib/i18n/locale";
 
 export type DeviceType = {
   id: WasteKind;
@@ -21,12 +23,15 @@ export type DeviceType = {
   transport: string;
 };
 
-const DEVICES = catalog.kinds as DeviceType[];
+function catalogFor(locale: Locale): DeviceType[] {
+  return (locale === "en" ? en : es).kinds as DeviceType[];
+}
 
-export function deviceFor(kind: WasteKind): DeviceType {
-  const found = DEVICES.find((d) => d.id === kind);
+export function deviceFor(kind: WasteKind, locale: Locale = "es"): DeviceType {
+  const devices = catalogFor(locale);
+  const found = devices.find((d) => d.id === kind);
   if (found) return found;
-  const fallback = DEVICES.find((d) => d.id === "unknown");
+  const fallback = devices.find((d) => d.id === "unknown");
   if (!fallback) throw new Error("catalog missing unknown");
   return fallback;
 }

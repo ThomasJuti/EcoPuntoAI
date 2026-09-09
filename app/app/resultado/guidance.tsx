@@ -12,10 +12,11 @@ import {
 import { deviceFor, type DeviceType } from "@/lib/catalog/device-types";
 import {
   applyConditions,
-  CONDITION_QUESTIONS,
+  CONDITION_KEYS,
   type Conditions,
 } from "@/lib/catalog/conditions";
 import type { WasteKind } from "@/lib/catalog/kinds";
+import { useLocale, useMessages } from "@/app/components/locale-provider";
 
 type Props = {
   kind: WasteKind;
@@ -24,31 +25,19 @@ type Props = {
   onShowMap?: () => void;
 };
 
-const FLAGS: {
-  key: "canUse" | "canReuse" | "canRepair" | "canDonate" | "canRecycle";
-  label: string;
-}[] = [
-  { key: "canUse", label: "Usarlo" },
-  { key: "canReuse", label: "Reusarlo" },
-  { key: "canRepair", label: "Repararlo" },
-  { key: "canDonate", label: "Donarlo" },
-  { key: "canRecycle", label: "Reciclarlo" },
-];
+const FLAG_KEYS = [
+  "canUse",
+  "canReuse",
+  "canRepair",
+  "canDonate",
+  "canRecycle",
+] as const;
 
-const DONT_HAZARD = /basura|pinch|fuego|quem/i;
-const RISK_DANGER = /hinchad|incendio|fuego|fuga/i;
-const DATA_LINE = /dato|sim|memoria|disco|fábrica/i;
+const DONT_HAZARD = /basura|pinch|fuego|quem|trash|puncture|fire|burn/i;
+const RISK_DANGER = /hinchad|incendio|fuego|fuga|swollen|fire|leak/i;
+const DATA_LINE = /dato|sim|memoria|disco|fábrica|data|factory|disk|wipe|erase|reset/i;
 
 type SectionId = "condition" | "flags" | "risks" | "dos" | "storage" | "data";
-
-const TITLES: Record<SectionId, string> = {
-  condition: "¿Cómo está el aparato?",
-  flags: "Qué se puede",
-  risks: "Riesgos",
-  dos: "Qué hacer y qué no",
-  storage: "Guardar y transportar",
-  data: "Tus datos",
-};
 
 const btnBase =
   "inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition duration-100 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100";
@@ -61,6 +50,8 @@ export function Guidance({
   initialAnswers = {},
   onShowMap,
 }: Props) {
+  const locale = useLocale();
+  const t = useMessages();
   const [conditions, setConditions] = useState<Conditions>(initialAnswers);
   const [step, setStep] = useState(0);
 
@@ -69,8 +60,8 @@ export function Guidance({
   }, [kind]);
 
   const device = useMemo(
-    () => applyConditions(deviceFor(kind), conditions),
-    [kind, conditions],
+    () => applyConditions(deviceFor(kind, locale), conditions, locale),
+    [kind, conditions, locale],
   );
 
   const sections = useMemo<SectionId[]>(() => {
@@ -113,7 +104,9 @@ export function Guidance({
     <section className="liquid-glass mt-6 max-w-2xl rounded-3xl p-6 md:p-8">
       <div className="flex items-center justify-between gap-4">
         <p className="text-xs font-medium tracking-wide text-petroleum/55 uppercase">
-          Paso {step + 1} de {sections.length}
+          {t.guidance.step
+            .replace("{n}", String(step + 1))
+            .replace("{total}", String(sections.length))}
         </p>
         <div className="flex gap-1.5" aria-hidden="true">
           {sections.map((s, i) => (
@@ -128,7 +121,7 @@ export function Guidance({
       </div>
 
       <h2 className="mt-3 font-heading text-2xl font-normal italic leading-tight tracking-[-0.01em] text-petroleum md:text-3xl">
-        {TITLES[section]}
+        {t.guidance.titles[section]}
       </h2>
 
       <div className="mt-5">
@@ -146,12 +139,12 @@ export function Guidance({
         {!isFirst && (
           <button type="button" onClick={() => setStep(step - 1)} className={btnGhost}>
             <ArrowLeft size={16} weight="bold" />
-            Atrás
+            {t.common.back}
           </button>
         )}
         {isFirst && (
           <button type="button" onClick={skip} className={btnGhost}>
-            Saltar
+            {t.guidance.skip}
           </button>
         )}
         {!isLast && (
@@ -160,20 +153,20 @@ export function Guidance({
             onClick={() => setStep(Math.min(step + 1, sections.length - 1))}
             className={btnPrimary}
           >
-            Siguiente
+            {t.guidance.next}
             <ArrowRight size={16} weight="bold" />
           </button>
         )}
         {isLast && onShowMap && (
           <button type="button" onClick={onShowMap} className={btnPrimary}>
             <MapPin size={16} weight="fill" />
-            Ver en el mapa
+            {t.guidance.seeMap}
           </button>
         )}
       </div>
       {isFirst && (
         <p className="mt-3 text-xs font-light text-petroleum/55">
-          Opcional. Si no sabes, salta y te mostramos los consejos generales.
+          {t.guidance.skipHint}
         </p>
       )}
     </section>
@@ -187,18 +180,19 @@ function ConditionStep({
   conditions: Conditions;
   onAnswer: (key: keyof Conditions, value: boolean) => void;
 }) {
+  const t = useMessages();
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      {CONDITION_QUESTIONS.map((q) => (
-        <fieldset key={q.key}>
+      {CONDITION_KEYS.map((key) => (
+        <fieldset key={key}>
           <legend className="text-sm font-medium text-petroleum">
-            {q.label}
+            {t.guidance.questions[key]}
           </legend>
           <div className="mt-2 flex gap-4">
             {(
               [
-                { value: true, label: "Sí" },
-                { value: false, label: "No" },
+                { value: true, label: t.common.yes },
+                { value: false, label: t.common.no },
               ] as const
             ).map((opt) => (
               <label
@@ -207,9 +201,9 @@ function ConditionStep({
               >
                 <input
                   type="radio"
-                  name={q.key}
-                  checked={conditions[q.key] === opt.value}
-                  onChange={() => onAnswer(q.key, opt.value)}
+                  name={key}
+                  checked={conditions[key] === opt.value}
+                  onChange={() => onAnswer(key, opt.value)}
                   className="size-4 accent-pine-600"
                 />
                 {opt.label}
@@ -223,14 +217,15 @@ function ConditionStep({
 }
 
 function FlagsStep({ device }: { device: DeviceType }) {
+  const t = useMessages();
   return (
     <div>
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-        {FLAGS.map((f) => {
-          const ok = device[f.key];
+        {FLAG_KEYS.map((key) => {
+          const ok = device[key];
           return (
             <li
-              key={f.key}
+              key={key}
               className="liquid-glass flex items-center gap-2 rounded-2xl px-3 py-2.5 text-sm font-medium text-petroleum"
             >
               {ok ? (
@@ -238,7 +233,9 @@ function FlagsStep({ device }: { device: DeviceType }) {
               ) : (
                 <X size={16} weight="bold" className="shrink-0 text-petroleum/40" />
               )}
-              <span className={ok ? "" : "text-petroleum/45"}>{f.label}</span>
+              <span className={ok ? "" : "text-petroleum/45"}>
+                {t.guidance.flags[key]}
+              </span>
             </li>
           );
         })}
@@ -246,7 +243,7 @@ function FlagsStep({ device }: { device: DeviceType }) {
       {device.specialHandling && (
         <p className="mt-4 flex items-center gap-2 text-sm font-medium text-warning">
           <Warning size={16} weight="fill" className="shrink-0" />
-          Necesita manejo especial.
+          {t.guidance.special}
         </p>
       )}
       <p className="mt-4 text-xs font-medium tracking-wide text-petroleum/55 uppercase">
@@ -275,11 +272,12 @@ function RisksStep({ device }: { device: DeviceType }) {
 }
 
 function DosStep({ device }: { device: DeviceType }) {
+  const t = useMessages();
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div>
         <h3 className="text-xs font-medium tracking-wide text-petroleum/55 uppercase">
-          Haz esto
+          {t.guidance.doThis}
         </h3>
         <ul className="mt-3 space-y-2.5">
           {device.dos.map((line) => (
@@ -299,7 +297,7 @@ function DosStep({ device }: { device: DeviceType }) {
       </div>
       <div>
         <h3 className="text-xs font-medium tracking-wide text-petroleum/55 uppercase">
-          Evita esto
+          {t.guidance.avoidThis}
         </h3>
         <ul className="mt-3 space-y-2.5">
           {device.donts.map((line) => {
@@ -329,11 +327,12 @@ function DosStep({ device }: { device: DeviceType }) {
 }
 
 function StorageStep({ device }: { device: DeviceType }) {
+  const t = useMessages();
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div>
         <h3 className="text-xs font-medium tracking-wide text-petroleum/55 uppercase">
-          Cómo guardarlo
+          {t.guidance.storage}
         </h3>
         <p className="mt-3 text-sm leading-relaxed text-petroleum">
           {device.storage}
@@ -341,7 +340,7 @@ function StorageStep({ device }: { device: DeviceType }) {
       </div>
       <div>
         <h3 className="text-xs font-medium tracking-wide text-petroleum/55 uppercase">
-          Cómo llevarlo
+          {t.guidance.transport}
         </h3>
         <p className="mt-3 text-sm leading-relaxed text-petroleum">
           {device.transport}
@@ -352,10 +351,11 @@ function StorageStep({ device }: { device: DeviceType }) {
 }
 
 function DataStep({ device }: { device: DeviceType }) {
+  const t = useMessages();
   const lines = device.dos.filter((line) => DATA_LINE.test(line));
   return (
     <div>
-      <p className="text-sm font-medium text-petroleum">Antes de entregarlo:</p>
+      <p className="text-sm font-medium text-petroleum">{t.guidance.beforeHandin}</p>
       <ul className="mt-3 space-y-2.5">
         {lines.map((line) => (
           <li

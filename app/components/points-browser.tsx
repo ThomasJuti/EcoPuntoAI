@@ -8,10 +8,11 @@ import {
   SpinnerGap,
   X,
 } from "@phosphor-icons/react";
-import { WASTE_KINDS, labelFor, type WasteKind } from "@/lib/catalog/kinds";
+import { labelFor, wasteKinds, type WasteKind } from "@/lib/catalog/kinds";
 import { listPoints, type PointsOrigin } from "@/lib/catalog/list";
 import type { CollectionPoint } from "@/lib/catalog/ranking";
 import { PointCard } from "./point-card";
+import { useLocale, useMessages } from "./locale-provider";
 
 export type { PointsOrigin };
 
@@ -32,6 +33,9 @@ export function PointsBrowser({
   initialKind = "unknown",
   initialOrigin = { type: "default" },
 }: Props) {
+  const t = useMessages();
+  const locale = useLocale();
+  const kinds = wasteKinds(locale);
   const [kind, setKind] = useState<WasteKind>(initialKind);
   const [origin, setOrigin] = useState<PointsOrigin>(initialOrigin);
   const [localityInput, setLocalityInput] = useState(
@@ -41,14 +45,14 @@ export function PointsBrowser({
   const [gpsError, setGpsError] = useState<string | null>(null);
 
   const listed = useMemo(
-    () => listPoints(catalog, kind, origin),
-    [catalog, kind, origin],
+    () => listPoints(catalog, kind, origin, locale),
+    [catalog, kind, origin, locale],
   );
 
   function useMyLocation() {
     setGpsError(null);
     if (!("geolocation" in navigator)) {
-      setGpsError("Este navegador no tiene geolocalización. Escribe tu localidad.");
+      setGpsError(t.mapUi.gpsMissing);
       return;
     }
     setLocating(true);
@@ -65,7 +69,7 @@ export function PointsBrowser({
       () => {
         setLocating(false);
         setGpsError(
-          "No pudimos usar tu ubicación. Escribe tu localidad, por ejemplo Kennedy.",
+          t.mapUi.gpsDenied,
         );
       },
       { timeout: 10000, maximumAge: 300000 },
@@ -100,11 +104,11 @@ export function PointsBrowser({
     <div className="mt-10">
       <div
         role="group"
-        aria-label="Filtrar por categoría"
+        aria-label={t.mapUi.filterAria}
         className="chip-scroll-fade -mx-6 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:-mx-16 lg:px-16"
       >
         <div className="flex w-max gap-2">
-          {WASTE_KINDS.map((row) => {
+          {kinds.map((row) => {
             const active = row.id === kind;
             return (
               <button
@@ -141,7 +145,7 @@ export function PointsBrowser({
           ) : (
             <Crosshair size={16} weight="bold" />
           )}
-          {locating ? "Ubicando…" : "Usar mi ubicación"}
+          {locating ? t.mapUi.locating : t.mapUi.useLocation}
         </button>
 
         <form
@@ -149,14 +153,14 @@ export function PointsBrowser({
           className="flex w-full min-w-0 flex-col gap-2 sm:flex-1 sm:flex-row sm:flex-nowrap sm:items-center"
         >
           <label htmlFor="locality" className="sr-only">
-            Tu localidad
+            {t.mapUi.locality}
           </label>
           <input
             id="locality"
             type="text"
             value={localityInput}
             onChange={(event) => setLocalityInput(event.target.value)}
-            placeholder="Kennedy, Suba, Chapinero…"
+            placeholder={t.mapUi.localityPlaceholder}
             autoComplete="off"
             className="liquid-glass-strong w-full rounded-full px-5 py-3 text-sm font-medium text-petroleum placeholder:text-petroleum/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-pine-600/50 sm:min-w-0 sm:flex-1"
           />
@@ -166,7 +170,7 @@ export function PointsBrowser({
               className="liquid-glass-strong inline-flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 sm:flex-none"
             >
               <MagnifyingGlass size={16} weight="bold" />
-              Buscar
+              {t.mapUi.search}
             </button>
             {dirty && (
               <button
@@ -175,7 +179,7 @@ export function PointsBrowser({
                 className="liquid-glass-strong inline-flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 sm:flex-none"
               >
                 <X size={16} weight="bold" />
-                Limpiar
+                {t.mapUi.clear}
               </button>
             )}
           </div>
@@ -193,7 +197,7 @@ export function PointsBrowser({
           <div className="liquid-glass max-w-xl rounded-3xl p-6">
             <p className="text-sm font-medium text-petroleum">{error}</p>
             <p className="mt-1.5 text-sm text-petroleum/60">
-              Revisa el nombre de la localidad o intenta con tu ubicación.
+              {t.mapUi.errorHint}
             </p>
           </div>
         )}
@@ -202,22 +206,21 @@ export function PointsBrowser({
           <>
             <p className="text-sm text-petroleum/60">
               {data.points.length === 0
-                ? `Sin resultados desde ${data.originLabel}.`
+                ? `${t.mapUi.noResults} ${data.originLabel}.`
                 : `${data.points.length} ${
-                    data.points.length === 1 ? "punto" : "puntos"
-                  } · distancias desde ${data.originLabel}.`}
+                    data.points.length === 1 ? t.mapUi.point : t.mapUi.points
+                  } · ${t.mapUi.from} ${data.originLabel}.`}
             </p>
 
             {data.points.length === 0 ? (
               <div className="liquid-glass mt-4 max-w-xl rounded-3xl p-8 text-center">
                 <MapPin size={28} className="mx-auto text-pine-600" />
                 <p className="mt-3 text-base font-medium text-petroleum">
-                  No hay puntos activos para «{labelFor(kind)}».
+                  {t.mapUi.empty} «{labelFor(kind, locale)}».
                 </p>
                 {kind !== "unknown" && (
                   <p className="mt-1.5 text-sm text-petroleum/60">
-                    Prueba con «No sé qué es» para ver todos los puntos de
-                    Bogotá.
+                    {t.mapUi.emptyHint}
                   </p>
                 )}
               </div>

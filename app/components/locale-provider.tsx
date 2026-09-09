@@ -1,0 +1,27 @@
+"use client";
+
+import { createContext, useContext, type ReactNode } from "react";
+import type { Locale } from "@/lib/i18n/locale";
+import { messages, type Messages } from "@/lib/i18n/messages";
+
+const LocaleContext = createContext<Locale>("es");
+
+export function LocaleProvider({
+  locale,
+  children,
+}: {
+  locale: Locale;
+  children: ReactNode;
+}) {
+  return (
+    <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>
+  );
+}
+
+export function useLocale(): Locale {
+  return useContext(LocaleContext);
+}
+
+export function useMessages(): Messages {
+  return messages[useLocale()];
+}

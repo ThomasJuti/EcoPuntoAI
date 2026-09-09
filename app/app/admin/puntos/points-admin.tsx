@@ -8,10 +8,9 @@ import {
   SpinnerGap,
   X,
 } from "@phosphor-icons/react";
-import { WASTE_KINDS, type WasteKind } from "@/lib/catalog/kinds";
+import { wasteKinds, type WasteKind } from "@/lib/catalog/kinds";
 import type { CollectionPoint } from "@/lib/catalog/ranking";
-
-const ACCEPTABLE_KINDS = WASTE_KINDS.filter((k) => k.id !== "unknown");
+import { useLocale, useMessages } from "@/app/components/locale-provider";
 
 type FormState = {
   name: string;
@@ -71,6 +70,9 @@ export function PointsAdmin({
   initialPoints: CollectionPoint[];
   warning?: string;
 }) {
+  const t = useMessages();
+  const locale = useLocale();
+  const kinds = wasteKinds(locale).filter((k) => k.id !== "unknown");
   const [state, setState] = useState<LoadState>({
     type: "ready",
     points: initialPoints,
@@ -146,7 +148,7 @@ export function PointsAdmin({
         return;
       }
       if (!res.ok) {
-        setFormError(json?.error ?? "No pudimos guardar el punto.");
+        setFormError(json?.error ?? t.admin.saveError);
         return;
       }
       if (isNew && json?.point) {
@@ -182,7 +184,7 @@ export function PointsAdmin({
       }
       setEditing(null);
     } catch {
-      setFormError("No pudimos guardar el punto.");
+      setFormError(t.admin.saveError);
     } finally {
       setSaving(false);
     }
@@ -226,7 +228,7 @@ export function PointsAdmin({
   if (state.type === "forbidden") {
     return (
       <div className="liquid-glass mt-10 max-w-xl rounded-3xl p-6">
-        <p className="text-sm font-medium text-petroleum">No tienes acceso.</p>
+        <p className="text-sm font-medium text-petroleum">{t.admin.forbidden}</p>
       </div>
     );
   }
@@ -258,7 +260,7 @@ export function PointsAdmin({
           className={`${btnBase} bg-pine-600 px-5 py-2.5 text-white hover:bg-pine-600/90`}
         >
           <Plus size={16} weight="bold" />
-          Nuevo punto
+          {t.admin.newPoint}
         </button>
       )}
 
@@ -268,13 +270,13 @@ export function PointsAdmin({
           className="liquid-glass max-w-2xl rounded-3xl p-6 md:p-8"
         >
           <h2 className="font-heading text-2xl font-normal italic leading-tight tracking-[-0.01em] text-petroleum">
-            {editing === "new" ? "Nuevo punto" : "Editar punto"}
+            {editing === "new" ? t.admin.newPoint : t.admin.editPoint}
           </h2>
 
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <label htmlFor="point-name" className={labelClass}>
-                Nombre
+                {t.admin.name}
               </label>
               <input
                 id="point-name"
@@ -287,7 +289,7 @@ export function PointsAdmin({
             </div>
             <div className="sm:col-span-2">
               <label htmlFor="point-address" className={labelClass}>
-                Dirección
+                {t.admin.address}
               </label>
               <input
                 id="point-address"
@@ -302,7 +304,7 @@ export function PointsAdmin({
             </div>
             <div>
               <label htmlFor="point-lat" className={labelClass}>
-                Latitud
+                {t.admin.lat}
               </label>
               <input
                 id="point-lat"
@@ -317,7 +319,7 @@ export function PointsAdmin({
             </div>
             <div>
               <label htmlFor="point-lng" className={labelClass}>
-                Longitud
+                {t.admin.lng}
               </label>
               <input
                 id="point-lng"
@@ -332,7 +334,7 @@ export function PointsAdmin({
             </div>
             <div>
               <label htmlFor="point-locality" className={labelClass}>
-                Localidad
+                {t.admin.locality}
               </label>
               <input
                 id="point-locality"
@@ -348,7 +350,7 @@ export function PointsAdmin({
             </div>
             <div>
               <label htmlFor="point-hours" className={labelClass}>
-                Horario
+                {t.admin.hours}
               </label>
               <input
                 id="point-hours"
@@ -358,13 +360,13 @@ export function PointsAdmin({
                 onChange={(e) =>
                   setForm((f) => ({ ...f, hours: e.target.value }))
                 }
-                placeholder="Lun a sáb, 8:00 a 17:00"
+                placeholder={t.admin.hoursPlaceholder}
                 className={`${inputClass} mt-2`}
               />
             </div>
             <div className="sm:col-span-2">
               <label htmlFor="point-contact" className={labelClass}>
-                Contacto (opcional)
+                {t.admin.contact}
               </label>
               <input
                 id="point-contact"
@@ -373,16 +375,16 @@ export function PointsAdmin({
                 onChange={(e) =>
                   setForm((f) => ({ ...f, contact: e.target.value }))
                 }
-                placeholder="Teléfono o correo"
+                placeholder={t.admin.contactPlaceholder}
                 className={`${inputClass} mt-2`}
               />
             </div>
           </div>
 
           <fieldset className="mt-5">
-            <legend className={labelClass}>Qué recibe</legend>
+            <legend className={labelClass}>{t.admin.accepts}</legend>
             <div className="mt-3 flex flex-wrap gap-2">
-              {ACCEPTABLE_KINDS.map((kind) => {
+              {kinds.map((kind) => {
                 const checked = form.accepted.includes(kind.id);
                 return (
                   <label
@@ -415,7 +417,7 @@ export function PointsAdmin({
               }
               className="size-4 accent-pine-600"
             />
-            Activo (visible en el mapa)
+            {t.admin.activeMap}
           </label>
 
           {formError && (
@@ -433,7 +435,7 @@ export function PointsAdmin({
               {saving && (
                 <SpinnerGap size={14} weight="bold" className={spinner} />
               )}
-              {saving ? "Guardando…" : "Guardar"}
+              {saving ? t.admin.saving : t.admin.save}
             </button>
             <button
               type="button"
@@ -441,7 +443,7 @@ export function PointsAdmin({
               className={`${btnBase} liquid-glass-strong px-5 py-2.5 text-petroleum hover:bg-white/50`}
             >
               <X size={14} weight="bold" />
-              Cancelar
+              {t.common.cancel}
             </button>
           </div>
         </form>
@@ -468,7 +470,7 @@ export function PointsAdmin({
                     point.isActive ? "bg-pine-600" : "bg-petroleum/30"
                   }`}
                 />
-                {point.isActive ? "Activo" : "Inactivo"}
+                {point.isActive ? t.admin.active : t.admin.inactive}
               </span>
             </div>
             <p className="mt-1.5 flex items-center gap-1.5 text-sm text-petroleum/70">
@@ -484,7 +486,7 @@ export function PointsAdmin({
                 className={`${btnBase} liquid-glass-strong px-4 py-2 text-petroleum hover:bg-white/50`}
               >
                 <PencilSimple size={14} weight="bold" />
-                Editar
+                {t.admin.edit}
               </button>
               {point.isActive ? (
                 <button
@@ -496,7 +498,7 @@ export function PointsAdmin({
                   {busyId === point.id && (
                     <SpinnerGap size={14} weight="bold" className={spinner} />
                   )}
-                  Desactivar
+                  {t.admin.deactivate}
                 </button>
               ) : (
                 <button
@@ -508,7 +510,7 @@ export function PointsAdmin({
                   {busyId === point.id && (
                     <SpinnerGap size={14} weight="bold" className={spinner} />
                   )}
-                  Reactivar
+                  {t.admin.reactivate}
                 </button>
               )}
             </div>

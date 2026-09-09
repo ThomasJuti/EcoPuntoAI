@@ -9,21 +9,13 @@ import {
   SpinnerGap,
   XCircle,
 } from "@phosphor-icons/react";
-import {
-  REPORT_REASON_LABELS,
-  type PointReport,
-} from "@/lib/catalog/reports";
+import type { PointReport } from "@/lib/catalog/reports";
+import { useLocale, useMessages } from "@/app/components/locale-provider";
 
 type LoadState =
   | { type: "ready"; reports: PointReport[]; warning?: string }
   | { type: "forbidden" }
   | { type: "error"; message: string };
-
-const dateFormat = new Intl.DateTimeFormat("es-CO", {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-});
 
 const btnBase =
   "inline-flex items-center gap-1.5 rounded-full text-sm font-medium transition duration-100 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100";
@@ -36,6 +28,13 @@ export function ReportsAdmin({
   initialReports: PointReport[];
   warning?: string;
 }) {
+  const t = useMessages();
+  const locale = useLocale();
+  const dateFormat = new Intl.DateTimeFormat(locale === "en" ? "en-US" : "es-CO", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
   const [state, setState] = useState<LoadState>({
     type: "ready",
     reports: initialReports,
@@ -74,7 +73,7 @@ export function ReportsAdmin({
   if (state.type === "forbidden") {
     return (
       <div className="liquid-glass mt-10 max-w-xl rounded-3xl p-6">
-        <p className="text-sm font-medium text-petroleum">No tienes acceso.</p>
+        <p className="text-sm font-medium text-petroleum">{t.admin.forbidden}</p>
       </div>
     );
   }
@@ -94,7 +93,7 @@ export function ReportsAdmin({
       <div className="liquid-glass mt-10 max-w-xl rounded-3xl p-8 text-center">
         <CheckCircle size={28} className="mx-auto text-pine-600" />
         <p className="mt-3 text-base font-medium text-petroleum">
-          No hay reportes abiertos.
+          {t.admin.noReports}
         </p>
         {notice && (
           <p className="mt-3 text-sm leading-relaxed text-petroleum/70">
@@ -118,7 +117,7 @@ export function ReportsAdmin({
             </h3>
             <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-pine-600/10 px-2.5 py-1 text-xs font-medium text-pine-950">
               <Flag size={12} weight="fill" />
-              {REPORT_REASON_LABELS[report.reason] ?? report.reason}
+              {t.report.reasons[report.reason] ?? report.reason}
             </span>
           </div>
           {report.comment && (
@@ -142,7 +141,7 @@ export function ReportsAdmin({
               ) : (
                 <CheckCircle size={14} weight="bold" />
               )}
-              Resolver
+              {t.admin.resolve}
             </button>
             <button
               type="button"
@@ -151,13 +150,13 @@ export function ReportsAdmin({
               className={`${btnBase} liquid-glass-strong px-4 py-2 text-petroleum hover:bg-white/50 disabled:cursor-wait disabled:opacity-60 disabled:active:scale-100`}
             >
               <XCircle size={14} weight="bold" />
-              Descartar
+              {t.admin.dismiss}
             </button>
             <Link
               href="/app/admin/puntos"
               className={`${btnBase} px-4 py-2 text-petroleum/60 hover:bg-white/40 hover:text-petroleum`}
             >
-              Editar punto
+              {t.admin.editPoint}
               <ArrowRight size={14} weight="bold" />
             </Link>
           </div>

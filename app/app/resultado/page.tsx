@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import { ScanSmiley } from "@phosphor-icons/react/dist/ssr";
 import { SignInForm } from "@/app/components/sign-in-form";
 import { getIdentification } from "@/lib/identify/history";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { messages } from "@/lib/i18n/messages";
 import { createClient, getUser } from "@/lib/supabase/server";
 import { Result } from "./result";
 import { ResultBackButton } from "./result-back-button";
 
-export const metadata: Metadata = {
-  title: "Resultado - EcoPunto IA",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return { title: messages[locale].result.metaTitle };
+}
 
 export default async function ResultadoPage({
   searchParams,
@@ -31,6 +34,8 @@ export default async function ResultadoPage({
     : "/app/resultado";
 
   const user = await getUser();
+  const locale = await getLocale();
+  const t = messages[locale];
   const saved =
     user && path ? await getIdentification(await createClient(), path) : null;
 
@@ -42,13 +47,13 @@ export default async function ResultadoPage({
           <ScanSmiley size={24} weight="regular" />
         </div>
         <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
-          Resultado
+          {t.result.title}
         </h1>
         <p className="mt-3 max-w-[52ch] text-lg font-light leading-relaxed text-petroleum/70">
-          Entra con Google para ver qué identificamos.
+          {t.result.signInLede}
         </p>
         <div className="mt-8">
-          <SignInForm next={next} />
+          <SignInForm next={next} label={t.signIn.google} />
         </div>
       </main>
     );

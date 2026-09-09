@@ -1,4 +1,5 @@
 import type { DeviceType } from "@/lib/catalog/device-types";
+import type { Locale } from "@/lib/i18n/locale";
 
 export type Conditions = {
   powersOn?: boolean;
@@ -6,6 +7,13 @@ export type Conditions = {
   swollenBattery?: boolean;
   waterExposed?: boolean;
 };
+
+export const CONDITION_KEYS: (keyof Conditions)[] = [
+  "powersOn",
+  "broken",
+  "swollenBattery",
+  "waterExposed",
+];
 
 export const CONDITION_QUESTIONS: {
   key: keyof Conditions;
@@ -17,13 +25,26 @@ export const CONDITION_QUESTIONS: {
   { key: "waterExposed", label: "¿Se mojó?" },
 ];
 
-const ANSWER_KEYS = CONDITION_QUESTIONS.map((q) => q.key);
+const QUESTION_LABELS: Record<Locale, Record<keyof Conditions, string>> = {
+  es: {
+    powersOn: "¿Enciende?",
+    broken: "¿Está roto?",
+    swollenBattery: "¿Batería hinchada?",
+    waterExposed: "¿Se mojó?",
+  },
+  en: {
+    powersOn: "Does it turn on?",
+    broken: "Is it broken?",
+    swollenBattery: "Swollen battery?",
+    waterExposed: "Did it get wet?",
+  },
+};
 
 export function parseAnswers(raw: unknown): Conditions {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
   const row = raw as Record<string, unknown>;
   const out: Conditions = {};
-  for (const key of ANSWER_KEYS) {
+  for (const key of CONDITION_KEYS) {
     if (typeof row[key] === "boolean") out[key] = row[key];
   }
   return out;
@@ -31,21 +52,55 @@ export function parseAnswers(raw: unknown): Conditions {
 
 export function formatAnsweredConditions(
   answers: Conditions,
-): { label: string; value: "Sí" | "No" }[] {
-  const out: { label: string; value: "Sí" | "No" }[] = [];
-  for (const q of CONDITION_QUESTIONS) {
-    const value = answers[q.key];
+  locale: Locale = "es",
+): { label: string; value: string }[] {
+  const yes = locale === "en" ? "Yes" : "Sí";
+  const no = locale === "en" ? "No" : "No";
+  const out: { label: string; value: string }[] = [];
+  for (const key of CONDITION_KEYS) {
+    const value = answers[key];
     if (typeof value === "boolean") {
-      out.push({ label: q.label, value: value ? "Sí" : "No" });
+      out.push({ label: QUESTION_LABELS[locale][key], value: value ? yes : no });
     }
   }
   return out;
 }
 
-const SWOLLEN_STORAGE =
-  "No la guardes. Aísla bornes, déjala en un recipiente no metálico y llévala ya a un punto de baterías.";
-const SWOLLEN_TRANSPORT =
-  "No la aplastes ni la pongas en el bolsillo. Caja rígida, bornes cubiertos, sin calor.";
+const OVERLAY: Record<
+  Locale,
+  {
+    swollenStorage: string;
+    swollenTransport: string;
+    swollenDonts: string[];
+    swollenRisk: string;
+    waterDont: string;
+  }
+> = {
+  es: {
+    swollenStorage:
+      "No la guardes. Aísla bornes, déjala en un recipiente no metálico y llévala ya a un punto de baterías.",
+    swollenTransport:
+      "No la aplastes ni la pongas en el bolsillo. Caja rígida, bornes cubiertos, sin calor.",
+    swollenDonts: [
+      "No la pinches ni la aplastes.",
+      "No la guardes mucho tiempo.",
+    ],
+    swollenRisk: "Batería dañada o hinchada",
+    waterDont: "No lo enciendas para ‘probarlo’ si se mojó.",
+  },
+  en: {
+    swollenStorage:
+      "Don’t store it. Isolate the terminals, leave it in a non-metal container, and take it to a battery point now.",
+    swollenTransport:
+      "Don’t crush it or put it in a pocket. Rigid box, terminals covered, no heat.",
+    swollenDonts: [
+      "Don’t puncture or crush it.",
+      "Don’t store it for long.",
+    ],
+    swollenRisk: "Damaged or swollen battery",
+    waterDont: "Don’t turn it on to ‘test it’ if it got wet.",
+  },
+};
 
 function extraDonts(device: DeviceType, lines: string[]) {
   const set = new Set(device.donts);
@@ -53,11 +108,21 @@ function extraDonts(device: DeviceType, lines: string[]) {
   return [...set];
 }
 
-export function applyConditions(device: DeviceType, conditions: Conditions): DeviceType {
+export function applyConditions(
+  device: DeviceType,
+  conditions: Conditions,
+  locale: Locale = "es",
+): DeviceType {
   const answered = Object.values(conditions).some((v) => v !== undefined);
   if (!answered) return device;
 
-  let next: DeviceType = { ...device, dos: [...device.dos], donts: [...device.donts], risks: [...device.risks] };
+  const copy = OVERLAY[locale];
+  let next: DeviceType = {
+    ...device,
+    dos: [...device.dos],
+    donts: [...device.donts],
+    risks: [...device.risks],
+  };
 
   if (conditions.swollenBattery) {
     next = {
@@ -66,15 +131,12 @@ export function applyConditions(device: DeviceType, conditions: Conditions): Dev
       canReuse: false,
       canDonate: false,
       specialHandling: true,
-      storage: SWOLLEN_STORAGE,
-      transport: SWOLLEN_TRANSPORT,
-      donts: extraDonts(next, [
-        "No la pinches ni la aplastes.",
-        "No la guardes mucho tiempo.",
-      ]),
+      storage: copy.swollenStorage,
+      transport: copy.swollenTransport,
+      donts: extraDonts(next, copy.swollenDonts),
     };
-    if (!next.risks.includes("Batería dañada o hinchada")) {
-      next.risks = ["Batería dañada o hinchada", ...next.risks];
+    if (!next.risks.includes(copy.swollenRisk)) {
+      next.risks = [copy.swollenRisk, ...next.risks];
     }
   }
 
@@ -83,7 +145,7 @@ export function applyConditions(device: DeviceType, conditions: Conditions): Dev
       ...next,
       canUse: false,
       specialHandling: true,
-      donts: extraDonts(next, ["No lo enciendas para ‘probarlo’ si se mojó."]),
+      donts: extraDonts(next, [copy.waterDont]),
     };
   }
 
