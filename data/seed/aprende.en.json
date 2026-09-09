@@ -1,0 +1,58 @@
+{
+  "sections": [
+    {
+      "id": "raee",
+      "title": "What goes where",
+      "lede": "Bogotá does not have a single bin for electronics.",
+      "paragraphs": [
+        "If it uses power or a battery, it is WEEE (RAEE). It is handed in through different take-back programs — sometimes two kiosks in the same mall.",
+        "Mixing a computer with loose batteries, or leaving it in the building recycling bin, is the wrong circuit."
+      ],
+      "items": [
+        { "text": "Phone, charger, cables, headphones → Ecolecta (SuperCADE or mall: Titán, Hayuelos, Unilago…).", "tone": "default" },
+        { "text": "Desktop or laptop → EcoCómputo. Not the Ecolecta kiosk, even in the same mall.", "tone": "default" },
+        { "text": "Loose cell or battery → Pilas con el Ambiente.", "tone": "default" },
+        { "text": "TV or small appliance → sometimes Red Verde (Homecenter, Alkosto).", "tone": "default" }
+      ]
+    },
+    {
+      "id": "trash",
+      "title": "Not the trash, not the corner bin",
+      "lede": "Building recycling does not take WEEE.",
+      "paragraphs": [
+        "In Bogotá they go to take-back points, not household trash or the corner recycling bin. That circuit is not built for electronics."
+      ],
+      "items": [
+        { "text": "If you don’t know what it is, take a photo on Home.", "tone": "default" },
+        { "text": "The map only lists points that take that type.", "tone": "default" },
+        { "text": "Don’t leave it on the street or at a CADE that doesn’t take it.", "tone": "default" }
+      ]
+    },
+    {
+      "id": "batteries",
+      "title": "Cells and batteries",
+      "lede": "They go to Pilas con el Ambiente, not Ecolecta.",
+      "paragraphs": [
+        "Button cells, rechargeables, and laptop or phone batteries are collected separately. Hayuelos, Titán, or SuperCADE CAD may have both Ecolecta and Pilas: two different kiosks."
+      ],
+      "items": [
+        { "text": "Don’t throw them in the trash or the toilet.", "tone": "hazard" },
+        { "text": "Don’t puncture, open, or burn them.", "tone": "hazard" },
+        { "text": "If it’s swollen, isolate it and take it to a battery point without charging it.", "tone": "hazard" }
+      ]
+    },
+    {
+      "id": "damaged",
+      "title": "Damaged devices",
+      "lede": "Swollen, wet, or leaking devices are not for donation or further use.",
+      "paragraphs": [
+        "A wet device or a swollen battery can catch fire if you charge or puncture it. In the app sheet you mark those conditions and the advice changes. The drop-off is still a Bogotá point that takes that waste."
+      ],
+      "items": [
+        { "text": "Don’t use it, donate it, or charge it.", "tone": "hazard" },
+        { "text": "Store it isolated, away from heat, and take it to a point that accepts it.", "tone": "hazard" },
+        { "text": "Don’t leave it on the street or in a kiosk for a different program.", "tone": "default" }
+      ]
+    }
+  ]
+}

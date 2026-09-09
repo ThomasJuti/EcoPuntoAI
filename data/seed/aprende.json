@@ -2,38 +2,43 @@
   "sections": [
     {
       "id": "raee",
-      "title": "Qué son los RAEE",
-      "lede": "Residuos de aparatos eléctricos y electrónicos.",
+      "title": "Qué va a dónde",
+      "lede": "En Bogotá no hay un solo contenedor de electrónicos.",
       "paragraphs": [
-        "Si usa corriente o pila, al final de su vida es un RAEE: el celular, el cargador, el portátil, la tele, la impresora, los audífonos.",
-        "No es basura común. Adentro hay metales, plásticos y a veces sustancias que no deben mezclarse con el aseo del hogar."
+        "Si usa corriente o pila, es un RAEE. Aquí se entrega en programas posconsumo distintos: a veces en el mismo centro comercial hay dos urnas.",
+        "Mezclar el computador con las pilas o dejarlo en el reciclaje del conjunto no es el circuito."
       ],
-      "items": []
+      "items": [
+        { "text": "Celular, cargador, cables, audífonos → Ecolecta (SuperCADE o centro comercial: Titán, Hayuelos, Unilago…).", "tone": "default" },
+        { "text": "Computador o portátil → EcoCómputo. No es la urna de Ecolecta, aunque esté en el mismo mall.", "tone": "default" },
+        { "text": "Pila o batería suelta → Pilas con el Ambiente.", "tone": "default" },
+        { "text": "Tele o electrodoméstico chico → a veces Red Verde (Homecenter, Alkosto).", "tone": "default" }
+      ]
     },
     {
       "id": "trash",
-      "title": "No van a la caneca",
-      "lede": "En Bogotá los RAEE se entregan en puntos posconsumo.",
+      "title": "Ni caneca ni esquina",
+      "lede": "El reciclaje del conjunto no recibe RAEE.",
       "paragraphs": [
-        "Tirarlos al aseo ordinario contamina suelo y agua. Tampoco van al contenedor de reciclaje de la esquina: ese circuito no está hecho para electrónicos."
+        "En Bogotá van a puntos posconsumo, no al aseo ordinario ni al contenedor de la esquina. Ese circuito no está hecho para electrónicos."
       ],
       "items": [
-        { "text": "Identifica el aparato en la app o elige la categoría a mano.", "tone": "default" },
-        { "text": "Sigue la ficha: qué se puede reusar, donar o reciclar.", "tone": "default" },
-        { "text": "Llévalo a un punto que reciba ese tipo de residuo.", "tone": "default" }
+        { "text": "Si no sabes qué es, sácale una foto en Inicio.", "tone": "default" },
+        { "text": "El mapa solo lista puntos que reciben ese tipo.", "tone": "default" },
+        { "text": "No dejes el aparato en la calle ni en un CADE que no lo reciba.", "tone": "default" }
       ]
     },
     {
       "id": "batteries",
       "title": "Pilas y baterías",
-      "lede": "Van a puntos Pilas, no a Ecolecta.",
+      "lede": "Van a Pilas con el Ambiente, no a Ecolecta.",
       "paragraphs": [
-        "Las pilas de botón, las recargables y las baterías de portátil o celular se recogen aparte. Mezclarlas con computadores o cables no es el circuito correcto."
+        "Pilas de botón, recargables y baterías de portátil o celular se recogen aparte. En Hayuelos, Titán o el SuperCADE CAD puede haber Ecolecta y Pilas: son dos urnas."
       ],
       "items": [
         { "text": "No las tires a la basura ni al inodoro.", "tone": "hazard" },
         { "text": "No las pinches, no las abras y no las eches al fuego.", "tone": "hazard" },
-        { "text": "Si está hinchada, aísala y llévala sin recargarla.", "tone": "hazard" }
+        { "text": "Si está hinchada, aísala y llévala sin recargarla a un punto de pilas.", "tone": "hazard" }
       ]
     },
     {
@@ -41,12 +46,12 @@
       "title": "Aparatos dañados",
       "lede": "Hinchados, mojados o con fuga no se donan ni se siguen usando.",
       "paragraphs": [
-        "Un equipo que se mojó o con batería hinchada puede incendiarse si lo cargas o lo pinchas. La ficha de la app cambia el consejo cuando marcas esas condiciones."
+        "Un equipo que se mojó o con batería hinchada puede incendiarse si lo cargas o lo pinchas. En la ficha de la app marcas esas condiciones y el consejo cambia. El punto sigue siendo uno de Bogotá que reciba ese residuo."
       ],
       "items": [
         { "text": "No lo uses, no lo dones y no lo recargues.", "tone": "hazard" },
-        { "text": "Guárdalo aislado, lejos de fuentes de calor.", "tone": "hazard" },
-        { "text": "Llévalo a un punto que reciba ese residuo; no lo dejes en la calle.", "tone": "default" }
+        { "text": "Guárdalo aislado, lejos de calor, y llévalo al punto que sí lo reciba.", "tone": "hazard" },
+        { "text": "No lo dejes en la calle ni en una urna que no sea de ese programa.", "tone": "default" }
       ]
     }
   ]

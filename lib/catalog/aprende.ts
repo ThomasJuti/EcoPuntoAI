@@ -1,4 +1,6 @@
-import aprende from "@/data/seed/aprende.json";
+import es from "@/data/seed/aprende.json";
+import en from "@/data/seed/aprende.en.json";
+import type { Locale } from "@/lib/i18n/locale";
 
 export type AprendeTone = "default" | "hazard";
 
@@ -10,4 +12,8 @@ export type AprendeSection = {
   items: { text: string; tone: AprendeTone }[];
 };
 
-export const APRENDE_SECTIONS = aprende.sections as AprendeSection[];
+export function aprendeSections(locale: Locale = "es"): AprendeSection[] {
+  return (locale === "en" ? en : es).sections as AprendeSection[];
+}
+
+export const APRENDE_SECTIONS = aprendeSections("es");
