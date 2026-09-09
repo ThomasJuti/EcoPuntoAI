@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Barlow } from "next/font/google";
+import { getLocale } from "@/lib/i18n/get-locale";
 import "./globals.css";
 
 const instrument = Instrument_Serif({
@@ -25,11 +26,12 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
   return (
-    <html lang="es" className={`${instrument.variable} ${barlow.variable}`}>
+    <html lang={locale} className={`${instrument.variable} ${barlow.variable}`}>
       <body>{children}</body>
     </html>
   );
