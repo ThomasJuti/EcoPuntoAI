@@ -81,9 +81,13 @@ function Navbar() {
         href="/"
         aria-current="page"
         aria-label={t.landing.homeAria}
-        className="liquid-glass grid h-12 w-12 place-items-center rounded-full text-petroleum transition duration-200 hover:bg-white/40 active:scale-[0.98]"
+        className="liquid-glass grid h-12 shrink-0 place-items-center rounded-full px-2.5 text-petroleum transition duration-200 hover:bg-white/40 active:scale-[0.98] sm:px-3"
       >
-        <span className="font-heading text-2xl italic">e</span>
+        <img
+          src="/images/logo-ecopunto-ia.png"
+          alt=""
+          className="h-4 w-auto sm:h-6"
+        />
       </Link>
       <nav className="liquid-glass hidden items-center gap-1 rounded-full p-1.5 md:flex">
         <a
