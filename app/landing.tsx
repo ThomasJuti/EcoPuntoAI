@@ -104,7 +104,7 @@ function Navbar() {
         </a>
       <Link
         href="/app"
-        className="group liquid-glass-strong ml-1 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-petroleum transition duration-200 hover:bg-white/50 active:scale-[0.98]"
+        className="group ml-1 inline-flex items-center gap-1.5 rounded-full bg-pine-600 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-pine-600/90 active:scale-[0.98]"
       >
           {t.landing.openApp}
           <ArrowUpRight className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" width={16} height={16} />
@@ -114,7 +114,7 @@ function Navbar() {
         <LocaleToggle locale={locale} label={t.nav.language} />
         <Link
           href="/app"
-          className="liquid-glass-strong inline-flex h-12 items-center rounded-full px-4 text-sm font-semibold text-petroleum transition duration-200 hover:bg-white/50 active:scale-[0.98] md:hidden"
+          className="inline-flex h-12 items-center rounded-full bg-pine-600 px-4 text-sm font-semibold text-white transition duration-200 hover:bg-pine-600/90 active:scale-[0.98] md:hidden"
         >
           {t.landing.open}
         </Link>
@@ -157,7 +157,7 @@ function Hero() {
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               href="/app"
-              className="group liquid-glass-strong inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-base font-medium text-petroleum transition duration-200 hover:bg-white/50 active:scale-[0.98]"
+              className="group inline-flex items-center gap-2 rounded-full bg-pine-600 px-7 py-3.5 text-base font-medium text-white transition duration-200 hover:bg-pine-600/90 active:scale-[0.98]"
             >
               {t.landing.openApp}
               <ArrowUpRight className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" width={18} height={18} />
@@ -177,14 +177,14 @@ function Hero() {
             className="grid max-w-xl grid-cols-1 gap-8 sm:grid-cols-2"
           >
             <div>
-              <ClockIcon className="text-pine-600" />
+              <ClockIcon className="text-grey" />
               <p className="mt-4 text-lg font-medium text-petroleum">{t.landing.threeSteps}</p>
               <p className="mt-1 max-w-[28ch] text-sm font-light text-petroleum/70">
                 {t.landing.threeStepsLede}
               </p>
             </div>
             <div>
-              <MapPin className="text-pine-600" size={24} weight="regular" />
+              <MapPin className="text-grey" size={24} weight="regular" />
               <p className="mt-4 text-lg font-medium text-petroleum">Bogotá</p>
               <p className="mt-1 max-w-[28ch] text-sm font-light text-petroleum/70">
                 {t.landing.bogotaLede}
@@ -211,7 +211,7 @@ function Capabilities() {
 
       <div className="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col justify-center px-6 py-28 lg:px-16">
         <motion.p
-          className="font-heading text-lg italic text-pine-600"
+          className="font-heading text-lg italic text-grey"
           initial={reduce ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.6 }}
@@ -245,7 +245,7 @@ function Capabilities() {
               whileHover={reduce ? undefined : { y: -8 }}
             >
               <div className="flex items-start justify-between gap-3">
-                <span className="liquid-glass grid h-11 w-11 shrink-0 place-items-center rounded-xl text-pine-600">
+                <span className="liquid-glass grid h-11 w-11 shrink-0 place-items-center rounded-xl text-grey">
                   <card.icon size={22} weight="regular" />
                 </span>
                 <span className="font-heading text-sm italic text-petroleum/45">
