@@ -25,6 +25,7 @@ import {
 import { getLocale } from "@/lib/i18n/get-locale";
 import { messages } from "@/lib/i18n/messages";
 import { createClient, resolveSessionUser } from "@/lib/supabase/server";
+import { Mascot } from "./mascot";
 
 const KIND_ICONS = {
   phones: DeviceMobile,
@@ -77,9 +78,12 @@ function historyHref(record: IdentificationRecord): string {
 
 function EmptyCard({ title, hint }: { title: string; hint: string }) {
   return (
-    <div className="liquid-glass rounded-3xl p-6 md:p-8">
-      <p className="text-sm leading-relaxed text-petroleum/75">{title}</p>
-      <p className="mt-1 text-sm text-petroleum/55">{hint}</p>
+    <div className="liquid-glass flex items-center gap-5 rounded-3xl p-6 md:gap-6 md:p-8">
+      <Mascot pose="guide" size="companion" className="shrink-0" />
+      <div className="min-w-0">
+        <p className="text-sm leading-relaxed text-petroleum/75">{title}</p>
+        <p className="mt-1 text-sm text-petroleum/55">{hint}</p>
+      </div>
     </div>
   );
 }

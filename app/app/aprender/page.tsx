@@ -8,6 +8,7 @@ import {
   Warning,
 } from "@phosphor-icons/react/dist/ssr";
 import { aprendeSections } from "@/lib/catalog/aprende";
+import { Mascot } from "@/app/components/mascot";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { messages } from "@/lib/i18n/messages";
 
@@ -23,12 +24,17 @@ export default async function AprenderPage() {
 
   return (
     <main>
-      <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
-        {t.title}
-      </h1>
-      <p className="mt-3 max-w-[52ch] text-lg font-light leading-relaxed text-petroleum/70">
-        {t.lede}
-      </p>
+      <div className="flex items-center gap-6 md:gap-10">
+        <div className="min-w-0">
+          <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">
+            {t.title}
+          </h1>
+          <p className="mt-3 max-w-[52ch] text-lg font-light leading-relaxed text-petroleum/70">
+            {t.lede}
+          </p>
+        </div>
+        <Mascot pose="guide" size="companion" className="ml-auto shrink-0" />
+      </div>
 
       <div className="mt-10 grid gap-4 md:grid-cols-2">
         {sections.map((section) => (

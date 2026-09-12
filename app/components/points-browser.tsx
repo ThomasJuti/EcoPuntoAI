@@ -4,13 +4,13 @@ import { useMemo, useState } from "react";
 import {
   Crosshair,
   MagnifyingGlass,
-  MapPin,
   SpinnerGap,
   X,
 } from "@phosphor-icons/react";
 import { labelFor, wasteKinds, type WasteKind } from "@/lib/catalog/kinds";
 import { listPoints, type PointsOrigin } from "@/lib/catalog/list";
 import type { CollectionPoint } from "@/lib/catalog/ranking";
+import { Mascot } from "./mascot";
 import { PointCard } from "./point-card";
 import { useLocale, useMessages } from "./locale-provider";
 
@@ -213,16 +213,18 @@ export function PointsBrowser({
             </p>
 
             {data.points.length === 0 ? (
-              <div className="liquid-glass mt-4 max-w-xl rounded-3xl p-8 text-center">
-                <MapPin size={28} className="mx-auto text-grey" />
-                <p className="mt-3 text-base font-medium text-petroleum">
-                  {t.mapUi.empty} «{labelFor(kind, locale)}».
-                </p>
-                {kind !== "unknown" && (
-                  <p className="mt-1.5 text-sm text-petroleum/60">
-                    {t.mapUi.emptyHint}
+              <div className="liquid-glass mt-4 flex max-w-xl items-center gap-5 rounded-3xl p-6 md:gap-6 md:p-8">
+                <Mascot pose="map" size="companion" className="shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-base font-medium text-petroleum">
+                    {t.mapUi.empty} «{labelFor(kind, locale)}».
                   </p>
-                )}
+                  {kind !== "unknown" && (
+                    <p className="mt-1.5 text-sm text-petroleum/60">
+                      {t.mapUi.emptyHint}
+                    </p>
+                  )}
+                </div>
               </div>
             ) : (
               <ul className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">

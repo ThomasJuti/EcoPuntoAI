@@ -12,6 +12,7 @@ import { FadingStill } from "./components/fading-still";
 import { BlurText } from "./components/blur-text";
 import { ArrowUpRight, ClockIcon } from "./components/icons";
 import { LocaleToggle } from "./components/locale-toggle";
+import { Mascot } from "./components/mascot";
 import { useLocale, useMessages } from "./components/locale-provider";
 
 const HERO_IMAGES = [
@@ -81,12 +82,12 @@ function Navbar() {
         href="/"
         aria-current="page"
         aria-label={t.landing.homeAria}
-        className="liquid-glass grid h-12 shrink-0 place-items-center rounded-full px-2.5 text-petroleum transition duration-200 hover:bg-white/40 active:scale-[0.98] sm:px-3"
+        className="liquid-glass grid h-12 shrink-0 place-items-center rounded-full px-3 text-petroleum transition duration-200 hover:bg-white/40 active:scale-[0.98] sm:h-14 sm:px-4"
       >
         <img
           src="/images/logo-ecopunto-ia.png"
           alt=""
-          className="h-4 w-auto sm:h-6"
+          className="h-8 w-auto sm:h-9"
         />
       </Link>
       <nav className="liquid-glass hidden items-center gap-1 rounded-full p-1.5 md:flex">
@@ -139,37 +140,39 @@ function Hero() {
         id="contenido"
         className="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col justify-center px-6 pb-28 pt-28 text-left lg:px-16"
       >
-        <h1 className="max-w-[13ch] pb-1 font-heading text-6xl font-normal italic leading-[1.05] tracking-[-0.04em] text-petroleum [text-shadow:0_0_28px_#fff,0_0_8px_#fff] md:text-7xl lg:text-[5.25rem]">
-          <BlurText
-            className="justify-start"
-            text={t.landing.hero}
-            key={t.landing.hero}
-          />
-        </h1>
+        <div>
+          <h1 className="max-w-[13ch] pb-1 font-heading text-6xl font-normal italic leading-[1.05] tracking-[-0.04em] text-petroleum [text-shadow:0_0_28px_#fff,0_0_8px_#fff] md:text-7xl lg:text-[5.25rem]">
+            <BlurText
+              className="justify-start"
+              text={t.landing.hero}
+              key={t.landing.hero}
+            />
+          </h1>
 
-        <Reveal delay={0.35}>
-          <p className="mt-6 max-w-[36ch] text-lg font-light leading-relaxed text-petroleum">
-            {t.landing.lede}
-          </p>
-        </Reveal>
+          <Reveal delay={0.35}>
+            <p className="mt-6 max-w-[36ch] text-lg font-light leading-relaxed text-petroleum">
+              {t.landing.lede}
+            </p>
+          </Reveal>
 
-        <Reveal delay={0.5}>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link
-              href="/app"
-              className="group inline-flex items-center gap-2 rounded-full bg-pine-600 px-7 py-3.5 text-base font-medium text-white transition duration-200 hover:bg-pine-600/90 active:scale-[0.98]"
-            >
-              {t.landing.openApp}
-              <ArrowUpRight className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" width={18} height={18} />
-            </Link>
-            <a
-              href="#capacidades"
-              className="liquid-glass inline-flex items-center rounded-full px-7 py-3.5 text-base font-medium text-petroleum/80 transition duration-200 hover:bg-white/40 active:scale-[0.98]"
-            >
-              {t.landing.seeCapabilities}
-            </a>
-          </div>
-        </Reveal>
+          <Reveal delay={0.5}>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link
+                href="/app"
+                className="group inline-flex items-center gap-2 rounded-full bg-pine-600 px-7 py-3.5 text-base font-medium text-white transition duration-200 hover:bg-pine-600/90 active:scale-[0.98]"
+              >
+                {t.landing.openApp}
+                <ArrowUpRight className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" width={18} height={18} />
+              </Link>
+              <a
+                href="#capacidades"
+                className="liquid-glass inline-flex items-center rounded-full px-7 py-3.5 text-base font-medium text-petroleum/80 transition duration-200 hover:bg-white/40 active:scale-[0.98]"
+              >
+                {t.landing.seeCapabilities}
+              </a>
+            </div>
+          </Reveal>
+        </div>
 
         <Reveal delay={0.65} className="mt-16">
           <div
@@ -264,6 +267,19 @@ function Capabilities() {
               </p>
             </motion.article>
           ))}
+          <motion.div
+            className="flex items-end justify-center md:col-span-3 md:col-start-10"
+            initial={reduce ? false : { opacity: 0, y: 42 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{
+              duration: 0.75,
+              delay: 0.52,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            <Mascot pose="idle" size="companion" className="lg:w-48" />
+          </motion.div>
         </div>
       </div>
     </section>
@@ -291,12 +307,17 @@ export function Landing() {
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="font-heading text-2xl italic text-petroleum">
-            EcoPunto IA
-            <span className="mt-1 block font-body text-sm font-light not-italic text-petroleum/60">
+          <div>
+            <img
+              src="/images/logo-ecopunto-ia.png"
+              alt="EcoPunto IA"
+              decoding="async"
+              className="h-10 w-auto sm:h-12"
+            />
+            <p className="mt-2 text-sm font-light text-petroleum/60">
               Bogotá
-            </span>
-          </p>
+            </p>
+          </div>
           <Link
             href="/app"
             className="group inline-flex items-center gap-1.5 text-sm font-medium text-petroleum transition duration-200 hover:text-pine-600"

@@ -17,6 +17,7 @@ import {
 } from "@/lib/catalog/conditions";
 import type { WasteKind } from "@/lib/catalog/kinds";
 import { useLocale, useMessages } from "@/app/components/locale-provider";
+import { Mascot } from "@/app/components/mascot";
 
 type Props = {
   kind: WasteKind;
@@ -158,10 +159,13 @@ export function Guidance({
           </button>
         )}
         {isLast && onShowMap && (
-          <button type="button" onClick={onShowMap} className={btnPrimary}>
-            <MapPin size={16} weight="fill" />
-            {t.guidance.seeMap}
-          </button>
+          <span className="flex items-center gap-2 sm:gap-3">
+            <Mascot pose="map" size="companion" className="shrink-0" />
+            <button type="button" onClick={onShowMap} className={btnPrimary}>
+              <MapPin size={16} weight="fill" />
+              {t.guidance.seeMap}
+            </button>
+          </span>
         )}
       </div>
       {isFirst && (

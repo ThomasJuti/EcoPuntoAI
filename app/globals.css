@@ -274,6 +274,19 @@
   to { transform: translate(-7%, 5%) scale(1.08); }
 }
 
+/* Mascota: flotación ambiental sutil (solo transform) + sombra suave para
+   separar el robot blanco del fondo */
+@keyframes mascot-float {
+  from { transform: translateY(0); }
+  to { transform: translateY(-8px); }
+}
+
+.mascot {
+  animation: mascot-float 5s ease-in-out infinite alternate;
+  will-change: transform;
+  filter: drop-shadow(0 14px 22px rgb(58 61 66 / 0.16));
+}
+
 @keyframes bubble-float {
   from { transform: translate(0, 0); }
   to { transform: translate(18px, -26px); }
@@ -291,7 +304,8 @@
   }
 
   .recycle-mancha__blob,
-  .recycle-bubble {
+  .recycle-bubble,
+  .mascot {
     transform: none !important;
     animation: none !important;
   }
