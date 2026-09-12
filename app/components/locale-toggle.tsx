@@ -58,19 +58,21 @@ export function LocaleToggle({ locale, label }: Props) {
       type="button"
       aria-label={label}
       onClick={switchLocale}
-      className="liquid-glass relative isolate grid h-11 shrink-0 grid-cols-2 items-stretch rounded-full p-1 text-[11px] font-semibold tracking-wide transition-[background-color] duration-100 ease-[var(--ease-out)] hover:bg-white/40 sm:h-12 sm:text-xs"
+      className="liquid-glass relative isolate grid h-11 shrink-0 grid-cols-1 items-stretch rounded-full p-1 text-[11px] font-semibold tracking-wide transition-[background-color] duration-100 ease-[var(--ease-out)] hover:bg-white/40 sm:h-12 sm:grid-cols-2 sm:text-xs"
     >
       <span
         aria-hidden
-        className={`pointer-events-none absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-petroleum transition-transform duration-[250ms] ease-[var(--ease-in-out)] motion-reduce:transition-none ${
+        className={`pointer-events-none absolute inset-y-1 left-1 hidden w-[calc(50%-0.25rem)] rounded-full bg-petroleum transition-transform duration-[250ms] ease-[var(--ease-in-out)] motion-reduce:transition-none sm:block ${
           current === "en" ? "translate-x-full" : "translate-x-0"
         }`}
       />
       {OPTIONS.map(({ code, short }) => (
         <span
           key={code}
-          className={`relative z-10 grid place-items-center px-2.5 transition-colors duration-[250ms] ease-[var(--ease-in-out)] sm:px-3 motion-reduce:transition-none ${
-            current === code ? "text-white" : "text-petroleum/40"
+          className={`relative z-10 place-items-center px-2.5 transition-colors duration-[250ms] ease-[var(--ease-in-out)] sm:px-3 motion-reduce:transition-none ${
+            current === code
+              ? "grid text-white sm:text-white"
+              : "hidden text-petroleum/40 sm:grid"
           }`}
         >
           {short}

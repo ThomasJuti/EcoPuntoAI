@@ -29,22 +29,22 @@ export function AppNav({
   const perfilActive = isActive(pathname, "/app/perfil", false);
 
   return (
-    <header className="sticky top-0 z-50 grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-2 bg-gradient-to-b from-white/80 to-transparent px-4 pt-4 sm:gap-3 sm:px-6 lg:px-16">
+    <header className="sticky top-0 z-50 grid shrink-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1.5 bg-gradient-to-b from-white/80 to-transparent px-3 pt-4 sm:gap-3 sm:px-6 lg:px-16">
       <Link
         href="/?landing"
         aria-label={labels.site}
-        className="liquid-glass grid h-11 shrink-0 place-items-center justify-self-start rounded-full px-2.5 text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/40 active:scale-[0.97] sm:h-12 sm:px-3"
+        className="liquid-glass grid h-11 shrink-0 place-items-center justify-self-start rounded-full px-2.5 text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/40 active:scale-[0.97] sm:h-12 sm:px-3 md:h-14 md:px-4"
       >
         <img
           src="/images/logo-ecopunto-ia.png"
           alt=""
-          className="h-4 w-auto sm:h-6"
+          className="h-5 w-auto sm:h-6 md:h-8"
         />
       </Link>
 
       <nav
         aria-label={labels.main}
-        className="liquid-glass flex items-center gap-0.5 rounded-full p-1 sm:gap-1 sm:p-1.5"
+        className="liquid-glass flex items-center gap-0 rounded-full p-1 sm:gap-1 sm:p-1.5"
       >
         {LINKS.map((link) => {
           const active = isActive(pathname, link.href, link.exact);
@@ -56,7 +56,7 @@ export function AppNav({
               href={link.href}
               aria-current={active ? "page" : undefined}
               aria-label={label}
-              className={`flex items-center gap-1.5 rounded-full px-2.5 py-2 text-sm text-petroleum/70 transition duration-200 hover:bg-white/40 hover:text-petroleum sm:px-4 ${
+              className={`flex items-center gap-1.5 rounded-full px-2 py-2 text-sm text-petroleum/70 transition duration-200 hover:bg-white/40 hover:text-petroleum sm:px-4 ${
                 active ? "bg-white/40 font-medium text-petroleum" : ""
               }`}
             >
@@ -67,7 +67,7 @@ export function AppNav({
         })}
       </nav>
 
-      <div className="flex items-center justify-self-end gap-2">
+      <div className="flex items-center justify-self-end gap-1.5 sm:gap-2">
         <LocaleToggle locale={locale} label={labels.language} />
         <Link
           href="/app/perfil"
@@ -80,10 +80,10 @@ export function AppNav({
         <Link
           href="/app"
           aria-label={labels.identify}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center gap-1.5 rounded-full bg-pine-600 text-sm font-semibold text-white transition duration-100 ease-[var(--ease-out)] hover:bg-pine-600/90 active:scale-[0.97] sm:h-12 sm:w-auto sm:px-5"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center gap-1.5 rounded-full bg-pine-600 text-sm font-semibold text-white transition duration-100 ease-[var(--ease-out)] hover:bg-pine-600/90 active:scale-[0.97] sm:h-12 sm:w-12 lg:w-auto lg:px-5"
         >
           <Camera size={18} weight="fill" />
-          <span className="hidden sm:inline">{labels.identify}</span>
+          <span className="hidden lg:inline">{labels.identify}</span>
         </Link>
       </div>
     </header>
