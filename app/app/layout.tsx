@@ -8,7 +8,7 @@ export default async function AppShellLayout({
   const locale = await getLocale();
   return (
     <div className="flex min-h-[100dvh] flex-col">
-      {/* Atmósfera fija pine/petroleum: el vidrio del header tiene algo que escarchar */}
+      {/* Atmósfera fija verde/gris tenue: el vidrio del header tiene algo que escarchar */}
       <div className="fixed inset-0 -z-10" aria-hidden>
         <div className="recycle-mancha">
           <span className="recycle-mancha__blob" />

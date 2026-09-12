@@ -11,7 +11,7 @@ Sitio: [ecopuntoai.vercel.app](https://ecopuntoai.vercel.app)
 
 Next.js (App Router) · Supabase (Auth Google, Postgres, Storage RLS) · Gemini · Vercel.
 
-Paleta: pino `#2F7050` / petróleo `#0A3D4A`.
+Paleta: 60% blanco `#FFFFFF` / 30% gris `#848890` (tinta `#3A3D42`) / 10% verde `#389040` en acciones.
 
 ## Local
 

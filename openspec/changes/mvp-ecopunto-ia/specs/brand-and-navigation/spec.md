@@ -8,7 +8,7 @@ Visual identity and primary navigation for EcoPunto IA.
 
 ### Requirement: Product name and identity
 
-The system MUST display the name "EcoPunto IA". The palette MUST use greens, petroleum blue, white, and neutral greys as defaults. Yellow, orange, and red MUST be reserved for warnings, precautions, or important alerts.
+The system MUST display the name "EcoPunto IA". The palette MUST follow 60 / 30 / 10: white for surfaces, neutral greys for text and secondary UI, and green only for primary actions (search, filter, details, Identificar). Yellow, orange, and red MUST be reserved for warnings, precautions, or important alerts. Petroleum teal MUST NOT be used.
 
 #### Scenario: Warning color used only for hazards
 
