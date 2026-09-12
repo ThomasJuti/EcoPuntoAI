@@ -94,7 +94,7 @@ export function Result({ kind, confidence, path, answers = {} }: Props) {
     <>
       <ResultBackButton />
 
-      <div className="liquid-glass mb-8 grid h-12 w-12 place-items-center rounded-2xl text-pine-600">
+      <div className="liquid-glass mb-8 grid h-12 w-12 place-items-center rounded-2xl text-grey">
         <KindIcon size={24} weight="regular" />
       </div>
 

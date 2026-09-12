@@ -474,7 +474,7 @@ export function PointsAdmin({
               </span>
             </div>
             <p className="mt-1.5 flex items-center gap-1.5 text-sm text-petroleum/70">
-              <MapPin size={14} className="shrink-0 text-pine-600" />
+              <MapPin size={14} className="shrink-0 text-grey" />
               {point.address} · {point.locality}
             </p>
             <p className="mt-1 text-xs text-petroleum/55">{point.hours}</p>
@@ -505,7 +505,7 @@ export function PointsAdmin({
                   type="button"
                   onClick={() => setActive(point, true)}
                   disabled={busyId === point.id}
-                  className={`${btnBase} px-4 py-2 text-pine-600 hover:bg-white/40 disabled:cursor-wait disabled:opacity-60 disabled:active:scale-100`}
+                  className={`${btnBase} px-4 py-2 text-petroleum/60 hover:bg-white/40 hover:text-petroleum disabled:cursor-wait disabled:opacity-60 disabled:active:scale-100`}
                 >
                   {busyId === point.id && (
                     <SpinnerGap size={14} weight="bold" className={spinner} />

@@ -27,7 +27,7 @@ export function PointCard({ point }: { point: RankedPoint }) {
           {point.name}
         </h3>
         {point.recommended && (
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-pine-600 px-2.5 py-1 text-xs font-medium text-white">
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-petroleum px-2.5 py-1 text-xs font-medium text-white">
             <Star size={12} weight="fill" />
             {t.point.recommended}
           </span>
@@ -40,7 +40,7 @@ export function PointCard({ point }: { point: RankedPoint }) {
 
       <ul className="mt-4 space-y-1.5 text-sm text-petroleum/75">
         <li className="flex items-center gap-2">
-          <MapPin size={15} className="shrink-0 text-pine-600" />
+          <MapPin size={15} className="shrink-0 text-grey" />
           <span>
             <strong className="font-semibold text-petroleum">
               {kmFormat.format(point.km)} km
@@ -49,12 +49,12 @@ export function PointCard({ point }: { point: RankedPoint }) {
           </span>
         </li>
         <li className="flex items-center gap-2">
-          <Clock size={15} className="shrink-0 text-pine-600" />
+          <Clock size={15} className="shrink-0 text-grey" />
           {formatPointHours(point.hours, locale)}
         </li>
         {point.contact && (
           <li className="flex items-center gap-2">
-            <Phone size={15} className="shrink-0 text-pine-600" />
+            <Phone size={15} className="shrink-0 text-grey" />
             {point.contact}
           </li>
         )}
@@ -64,7 +64,7 @@ export function PointCard({ point }: { point: RankedPoint }) {
         {point.accepted.map((kind) => (
           <li
             key={kind}
-            className="rounded-full bg-pine-600/10 px-2.5 py-1 text-xs font-medium text-pine-950"
+            className="rounded-full bg-petroleum/10 px-2.5 py-1 text-xs font-medium text-petroleum/80"
           >
             {labelFor(kind, locale)}
           </li>
@@ -87,7 +87,7 @@ export function PointCard({ point }: { point: RankedPoint }) {
           href={mapsUrl(point)}
           target="_blank"
           rel="noopener noreferrer"
-          className="liquid-glass-strong inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+          className="inline-flex items-center gap-1.5 rounded-full bg-pine-600 px-4 py-2 text-sm font-medium text-white transition duration-100 ease-[var(--ease-out)] hover:bg-pine-600/90 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
         >
           {t.point.directions}
           <ArrowUpRight size={14} weight="bold" />

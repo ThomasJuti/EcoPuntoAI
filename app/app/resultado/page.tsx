@@ -43,7 +43,7 @@ export default async function ResultadoPage({
     return (
       <main className="flex min-h-[62dvh] flex-col justify-center">
         <ResultBackButton />
-        <div className="liquid-glass mb-8 grid h-12 w-12 place-items-center rounded-2xl text-pine-600">
+        <div className="liquid-glass mb-8 grid h-12 w-12 place-items-center rounded-2xl text-grey">
           <ScanSmiley size={24} weight="regular" />
         </div>
         <h1 className="font-heading text-4xl font-normal italic leading-[1.05] tracking-[-0.02em] text-petroleum md:text-5xl">

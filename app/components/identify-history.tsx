@@ -121,7 +121,7 @@ export async function IdentifyHistory() {
               href={historyHref(record)}
               className="liquid-glass flex items-center gap-4 rounded-3xl p-4 transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 md:p-5"
             >
-              <span className="liquid-glass-strong grid h-11 w-11 shrink-0 place-items-center rounded-2xl text-pine-600">
+              <span className="liquid-glass-strong grid h-11 w-11 shrink-0 place-items-center rounded-2xl text-grey">
                 <KindIcon size={22} weight="regular" />
               </span>
               <span className="min-w-0 flex-1">

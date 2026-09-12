@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, House, MapPin, User } from "@phosphor-icons/react";
+import { BookOpen, Camera, House, MapPin, User } from "@phosphor-icons/react";
 import { LocaleToggle } from "./locale-toggle";
 import type { Locale } from "@/lib/i18n/locale";
 import type { Messages } from "@/lib/i18n/messages";
@@ -73,10 +73,17 @@ export function AppNav({
           href="/app/perfil"
           aria-label={labels.profile}
           aria-current={perfilActive ? "page" : undefined}
-          className="liquid-glass-strong inline-flex h-11 w-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-0 text-sm font-semibold text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] sm:h-12 sm:w-auto sm:px-5"
+          className="liquid-glass-strong inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] sm:h-12 sm:w-12"
         >
           <User size={18} weight={perfilActive ? "fill" : "regular"} />
-          <span className="hidden sm:inline">{labels.profile}</span>
+        </Link>
+        <Link
+          href="/app"
+          aria-label={labels.identify}
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center gap-1.5 rounded-full bg-pine-600 text-sm font-semibold text-white transition duration-100 ease-[var(--ease-out)] hover:bg-pine-600/90 active:scale-[0.97] sm:h-12 sm:w-auto sm:px-5"
+        >
+          <Camera size={18} weight="fill" />
+          <span className="hidden sm:inline">{labels.identify}</span>
         </Link>
       </div>
     </header>

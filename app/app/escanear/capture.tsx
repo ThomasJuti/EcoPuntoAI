@@ -66,7 +66,7 @@ export function Capture({ copy }: Props) {
   }
 
   const buttonBase =
-    "inline-flex items-center gap-2.5 rounded-full px-7 py-4 text-base font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/40 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100";
+    "inline-flex items-center gap-2.5 rounded-full px-7 py-4 text-base font-medium transition duration-100 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100";
 
   return (
     <div className="mt-10">
@@ -93,7 +93,7 @@ export function Capture({ copy }: Props) {
           type="button"
           disabled={busy}
           onClick={() => cameraRef.current?.click()}
-          className={`liquid-glass-strong ${buttonBase}`}
+          className={`${buttonBase} bg-pine-600 text-white hover:bg-pine-600/90`}
         >
           <Camera size={20} weight="fill" />
           {copy.photo}
@@ -102,7 +102,7 @@ export function Capture({ copy }: Props) {
           type="button"
           disabled={busy}
           onClick={() => galleryRef.current?.click()}
-          className={`liquid-glass ${buttonBase}`}
+          className={`${buttonBase} liquid-glass text-petroleum hover:bg-white/40`}
         >
           <ImageSquare size={20} weight="regular" />
           {copy.gallery}

@@ -104,7 +104,7 @@ export function ReportPoint({ pointId, pointName }: Props) {
         className="flex w-full items-center justify-between gap-2 text-sm font-medium text-petroleum"
       >
         <span className="inline-flex items-center gap-1.5">
-          <Flag size={14} weight="fill" className="text-pine-600" />
+          <Flag size={14} weight="fill" className="text-grey" />
           Reportar un dato
         </span>
         <CaretDown size={14} weight="bold" className="text-petroleum/50" />

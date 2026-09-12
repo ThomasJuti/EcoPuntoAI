@@ -8,6 +8,7 @@ export type Messages = {
     map: string;
     learn: string;
     profile: string;
+    identify: string;
     site: string;
     main: string;
     language: string;
@@ -196,6 +197,7 @@ export const messages: Record<Locale, Messages> = {
       map: "Mapa",
       learn: "Aprende",
       profile: "Perfil",
+      identify: "Identificar",
       site: "EcoPunto IA - sitio",
       main: "Navegación principal",
       language: "Idioma",
@@ -436,6 +438,7 @@ export const messages: Record<Locale, Messages> = {
       map: "Map",
       learn: "Learn",
       profile: "Profile",
+      identify: "Identify",
       site: "EcoPunto IA - site",
       main: "Main navigation",
       language: "Language",

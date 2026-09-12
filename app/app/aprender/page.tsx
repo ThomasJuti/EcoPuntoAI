@@ -39,7 +39,7 @@ export default async function AprenderPage() {
             <h2 className="font-heading text-2xl font-normal italic leading-tight tracking-[-0.01em] text-petroleum md:text-3xl">
               {section.title}
             </h2>
-            <p className="mt-2 text-sm font-medium text-pine-600">
+            <p className="mt-2 text-sm font-medium text-petroleum/60">
               {section.lede}
             </p>
             {section.paragraphs.map((paragraph) => (
@@ -74,9 +74,9 @@ export default async function AprenderPage() {
                         <ArrowRight
                           size={14}
                           weight="bold"
-                          className="shrink-0 text-pine-600"
+                          className="shrink-0 text-grey"
                         />
-                        <span className="inline-flex items-center rounded-full bg-pine-600/10 px-2.5 py-1 text-xs font-semibold text-pine-950">
+                        <span className="inline-flex items-center rounded-full bg-petroleum/10 px-2.5 py-1 text-xs font-semibold text-petroleum/80">
                           {program}
                         </span>
                         {detail && (
@@ -120,7 +120,7 @@ export default async function AprenderPage() {
       <div className="mt-8 flex flex-wrap gap-3">
         <Link
           href="/app"
-          className="liquid-glass-strong inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+          className="inline-flex items-center gap-2 rounded-full bg-pine-600 px-6 py-3 text-sm font-medium text-white transition duration-100 ease-[var(--ease-out)] hover:bg-pine-600/90 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
         >
           <Camera size={16} weight="bold" />
           {t.photo}

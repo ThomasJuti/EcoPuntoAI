@@ -167,7 +167,7 @@ export function PointsBrowser({
           <div className="flex gap-2">
             <button
               type="submit"
-              className="liquid-glass-strong inline-flex flex-1 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium text-petroleum transition duration-100 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 sm:flex-none"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-pine-600 px-5 py-3 text-sm font-medium text-white transition duration-100 ease-[var(--ease-out)] hover:bg-pine-600/90 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 sm:flex-none"
             >
               <MagnifyingGlass size={16} weight="bold" />
               {t.mapUi.search}
@@ -214,7 +214,7 @@ export function PointsBrowser({
 
             {data.points.length === 0 ? (
               <div className="liquid-glass mt-4 max-w-xl rounded-3xl p-8 text-center">
-                <MapPin size={28} className="mx-auto text-pine-600" />
+                <MapPin size={28} className="mx-auto text-grey" />
                 <p className="mt-3 text-base font-medium text-petroleum">
                   {t.mapUi.empty} «{labelFor(kind, locale)}».
                 </p>

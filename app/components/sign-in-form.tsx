@@ -35,9 +35,11 @@ export function SignInForm({
       <input type="hidden" name="next" value={next} />
       <button
         type="submit"
-        className="liquid-glass-strong inline-flex items-center gap-2.5 rounded-full px-8 py-4 text-base font-medium text-petroleum transition duration-200 ease-[var(--ease-out)] hover:bg-white/50 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+        className="inline-flex items-center gap-2.5 rounded-full bg-pine-600 px-8 py-4 text-base font-medium text-white transition duration-200 ease-[var(--ease-out)] hover:bg-pine-600/90 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
       >
-        <GoogleMark />
+        <span className="grid shrink-0 place-items-center rounded-full bg-white p-1">
+          <GoogleMark />
+        </span>
         {label}
       </button>
     </form>

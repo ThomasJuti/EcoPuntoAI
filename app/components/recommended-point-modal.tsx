@@ -182,7 +182,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
             <h3 className="text-base font-semibold leading-snug text-petroleum">
               {state.point.name}
             </h3>
-            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-pine-600 px-2.5 py-1 text-xs font-medium text-white">
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-petroleum px-2.5 py-1 text-xs font-medium text-white">
               <Star size={12} weight="fill" />
               {t.point.recommended}
             </span>
@@ -192,7 +192,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
           </p>
           <ul className="mt-3 space-y-1.5 text-sm text-petroleum/75">
             <li className="flex items-center gap-2">
-              <MapPin size={15} className="shrink-0 text-pine-600" />
+              <MapPin size={15} className="shrink-0 text-grey" />
               <span>
                 <strong className="font-semibold text-petroleum">
                   {kmFormat.format(state.point.km)} km
@@ -201,7 +201,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
               </span>
             </li>
             <li className="flex items-center gap-2">
-              <Clock size={15} className="shrink-0 text-pine-600" />
+              <Clock size={15} className="shrink-0 text-grey" />
               {formatPointHours(state.point.hours, locale)}
             </li>
           </ul>
@@ -222,7 +222,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
         )}
         <Link
           href={`/app/puntos?kind=${kind}`}
-          className={`${btnBase} bg-pine-600/10 text-pine-950 hover:bg-pine-600/15`}
+          className={`${btnBase} liquid-glass text-petroleum hover:bg-white/50`}
         >
           {t.recommended.more}
         </Link>

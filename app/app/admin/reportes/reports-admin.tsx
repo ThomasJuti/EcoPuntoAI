@@ -115,7 +115,7 @@ export function ReportsAdmin({
             <h3 className="text-base font-semibold leading-snug text-petroleum">
               {report.point_name}
             </h3>
-            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-pine-600/10 px-2.5 py-1 text-xs font-medium text-pine-950">
+            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-petroleum/10 px-2.5 py-1 text-xs font-medium text-petroleum/80">
               <Flag size={12} weight="fill" />
               {t.report.reasons[report.reason] ?? report.reason}
             </span>
