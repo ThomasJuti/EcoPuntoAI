@@ -278,7 +278,16 @@ function Capabilities() {
               ease: [0.22, 1, 0.36, 1],
             }}
           >
-            <Mascot pose="idle" size="companion" className="lg:w-48" />
+            {reduce ? (
+              <Mascot pose="idle" size="companion" className="lg:w-48" />
+            ) : (
+              <img
+                src="/images/mascot-wave.webp"
+                alt=""
+                aria-hidden="true"
+                className="pointer-events-none w-28 bg-transparent select-none object-contain sm:w-40 md:w-48 lg:w-56"
+              />
+            )}
           </motion.div>
         </div>
       </div>
