@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ScanSmiley } from "@phosphor-icons/react/dist/ssr";
 import { SignInForm } from "@/app/components/sign-in-form";
+import { deliveredPaths } from "@/lib/catalog/deliveries";
 import { getIdentification } from "@/lib/identify/history";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { messages } from "@/lib/i18n/messages";
@@ -36,8 +37,12 @@ export default async function ResultadoPage({
   const user = await getUser();
   const locale = await getLocale();
   const t = messages[locale];
-  const saved =
-    user && path ? await getIdentification(await createClient(), path) : null;
+  const supabase = user && path ? await createClient() : null;
+  const saved = supabase && path ? await getIdentification(supabase, path) : null;
+  const deliveredAt =
+    supabase && path
+      ? ((await deliveredPaths(supabase, [path])).get(path) ?? null)
+      : null;
 
   if (!user) {
     return (
@@ -66,6 +71,7 @@ export default async function ResultadoPage({
         confidence={confidence}
         path={path}
         answers={saved?.answers ?? {}}
+        deliveredAt={deliveredAt}
       />
     </main>
   );

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   BatteryFull,
   BatteryMedium,
+  CheckCircle,
   CookingPot,
   Desktop,
   DeviceMobile,
@@ -12,6 +13,7 @@ import {
   Headphones,
   Laptop,
   Mouse,
+  Package,
   PlugCharging,
   Printer,
   Question,
@@ -54,11 +56,23 @@ type Props = {
   confidence: string | null;
   path: string | null;
   answers?: Conditions;
+  deliveredAt?: string | null;
 };
 
-export function Result({ kind, confidence, path, answers = {} }: Props) {
+const deliverBtn =
+  "inline-flex items-center gap-2 rounded-full bg-pine-600 px-5 py-2.5 text-sm font-medium text-white transition duration-100 ease-[var(--ease-out)] hover:bg-pine-600/90 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100";
+
+export function Result({
+  kind,
+  confidence,
+  path,
+  answers = {},
+  deliveredAt: initialDeliveredAt = null,
+}: Props) {
   const router = useRouter();
   const [mapOpen, setMapOpen] = useState(false);
+  const [confirmOnOpen, setConfirmOnOpen] = useState(false);
+  const [deliveredAt, setDeliveredAt] = useState(initialDeliveredAt);
   const locale = useLocale();
   const t = useMessages();
   const kinds = wasteKinds(locale);
@@ -112,6 +126,28 @@ export function Result({ kind, confidence, path, answers = {} }: Props) {
           {t.result.confidence}: {confidencePct}%
         </p>
       )}
+      {!mustPick && path && (
+        <div className="mt-5">
+          {deliveredAt !== null ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-pine-600/12 px-3.5 py-1.5 text-sm font-medium text-pine-950">
+              <CheckCircle size={16} weight="fill" className="text-pine-600" />
+              {t.result.deliveredAt.replace("{name}", deliveredAt)}
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setConfirmOnOpen(true);
+                setMapOpen(true);
+              }}
+              className={deliverBtn}
+            >
+              <Package size={16} weight="bold" />
+              {t.point.deliver}
+            </button>
+          )}
+        </div>
+      )}
 
       <section className="liquid-glass mt-10 max-w-lg rounded-3xl p-6">
         <label
@@ -138,13 +174,19 @@ export function Result({ kind, confidence, path, answers = {} }: Props) {
         kind={valid}
         path={path}
         initialAnswers={answers}
-        onShowMap={() => setMapOpen(true)}
+        onShowMap={() => {
+          setConfirmOnOpen(false);
+          setMapOpen(true);
+        }}
       />
 
       {!mustPick && (
         <RecommendedPointModal
           kind={valid}
           path={path}
+          deliveredAt={deliveredAt}
+          confirmOnOpen={confirmOnOpen}
+          onDelivered={setDeliveredAt}
           open={mapOpen}
           onClose={() => setMapOpen(false)}
         />
