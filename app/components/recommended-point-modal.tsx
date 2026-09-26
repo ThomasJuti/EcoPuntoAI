@@ -12,7 +12,7 @@ import {
   Star,
   X,
 } from "@phosphor-icons/react";
-import type { WasteKind } from "@/lib/catalog/kinds";
+import { labelFor, type WasteKind } from "@/lib/catalog/kinds";
 import { mapsUrl, type RankedPoint } from "@/lib/catalog/ranking";
 import { BOGOTA_CENTER, type LatLng } from "@/lib/geo/bogota";
 import { formatPointHours } from "@/lib/i18n/hours";
@@ -22,6 +22,11 @@ import { useLocale, useMessages } from "./locale-provider";
 type Props = {
   kind: WasteKind;
   path?: string | null;
+  /** Point name when this identification was already handed in. */
+  deliveredAt?: string | null;
+  /** Open straight on the hand-in confirmation. */
+  confirmOnOpen?: boolean;
+  onDelivered?: (pointName: string) => void;
   open: boolean;
   onClose: () => void;
 };
@@ -52,10 +57,19 @@ function nearLabel(
   return copy.nearNamed.replace("{name}", originLabel);
 }
 
-export function RecommendedPointModal({ kind, path = null, open, onClose }: Props) {
+export function RecommendedPointModal({
+  kind,
+  path = null,
+  deliveredAt = null,
+  confirmOnOpen = false,
+  onDelivered,
+  open,
+  onClose,
+}: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [state, setState] = useState<FetchState>({ status: "loading" });
   const [delivery, setDelivery] = useState<Delivery>(NO_DELIVERY);
+  const [confirming, setConfirming] = useState(false);
   const t = useMessages();
   const locale = useLocale();
   const kmFormat = new Intl.NumberFormat(locale === "en" ? "en-US" : "es-CO", {
@@ -108,6 +122,7 @@ export function RecommendedPointModal({ kind, path = null, open, onClose }: Prop
 
     setState({ status: "loading" });
     setDelivery(NO_DELIVERY);
+    setConfirming(confirmOnOpen);
     void load();
 
     if ("geolocation" in navigator) {
@@ -125,7 +140,7 @@ export function RecommendedPointModal({ kind, path = null, open, onClose }: Prop
     return () => {
       cancelled = true;
     };
-  }, [open, kind, locale]);
+  }, [open, kind, locale, confirmOnOpen]);
 
   async function deliver(point: RankedPoint) {
     // A retry after arriving only re-sends; the walk already played.
@@ -150,8 +165,20 @@ export function RecommendedPointModal({ kind, path = null, open, onClose }: Prop
   }
 
   const failed = delivery.post === "error" || delivery.post === "unauth";
-  const delivered = delivery.arrived && delivery.post === "ok";
-  const busy = delivery.walking && !delivered && !(delivery.arrived && failed);
+  const justDelivered = delivery.arrived && delivery.post === "ok";
+  const handedIn = deliveredAt !== null;
+  const delivered = justDelivered || handedIn;
+  const busy = delivery.walking && !justDelivered && !(delivery.arrived && failed);
+  const canDeliver = Boolean(path) && !handedIn;
+
+  const readyName = state.status === "ready" ? state.point.name : null;
+  const onDeliveredRef = useRef(onDelivered);
+  useEffect(() => {
+    onDeliveredRef.current = onDelivered;
+  }, [onDelivered]);
+  useEffect(() => {
+    if (justDelivered && readyName) onDeliveredRef.current?.(readyName);
+  }, [justDelivered, readyName]);
 
   function onBackdropClick(event: React.MouseEvent<HTMLDialogElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -251,7 +278,16 @@ export function RecommendedPointModal({ kind, path = null, open, onClose }: Prop
               {formatPointHours(state.point.hours, locale)}
             </li>
           </ul>
-          {delivered && (
+          {handedIn && !justDelivered && (
+            <p
+              role="status"
+              className="liquid-glass mt-4 flex items-center gap-2 rounded-2xl p-4 text-sm font-medium text-petroleum"
+            >
+              <CheckCircle size={18} weight="fill" className="shrink-0 text-pine-600" />
+              {t.recommended.alreadyDelivered.replace("{name}", deliveredAt ?? "")}
+            </p>
+          )}
+          {justDelivered && (
             <div
               role="status"
               className="liquid-glass mt-4 flex items-start gap-3 rounded-2xl p-4"
@@ -276,6 +312,44 @@ export function RecommendedPointModal({ kind, path = null, open, onClose }: Prop
                 : t.recommended.deliverError}
             </p>
           )}
+          {confirming && canDeliver && !busy && !justDelivered && (
+            <div
+              role="alertdialog"
+              aria-labelledby="deliver-confirm-title"
+              aria-describedby="deliver-confirm-body"
+              className="liquid-glass mt-4 rounded-2xl p-4"
+            >
+              <p id="deliver-confirm-title" className="text-sm font-semibold text-petroleum">
+                {t.recommended.confirmTitle}
+              </p>
+              <p id="deliver-confirm-body" className="mt-1 text-sm leading-relaxed text-petroleum/70">
+                {t.recommended.confirmBody
+                  .replace("{device}", labelFor(kind, locale).toLowerCase())
+                  .replace("{name}", state.point.name)}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  autoFocus
+                  onClick={() => {
+                    setConfirming(false);
+                    void deliver(state.point);
+                  }}
+                  className={`${btnBase} bg-pine-600 text-white hover:bg-pine-600/90`}
+                >
+                  <Package size={14} weight="bold" />
+                  {t.recommended.confirmYes}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirming(false)}
+                  className={`${btnBase} liquid-glass-strong text-petroleum hover:bg-white/50`}
+                >
+                  {t.common.cancel}
+                </button>
+              </div>
+            </div>
+          )}
         </>
       )}
 
@@ -291,11 +365,11 @@ export function RecommendedPointModal({ kind, path = null, open, onClose }: Prop
             <ArrowUpRight size={14} weight="bold" />
           </a>
         )}
-        {state.status === "ready" && (
+        {state.status === "ready" && (path || handedIn) && (
           <button
             type="button"
-            onClick={() => void deliver(state.point)}
-            disabled={busy || delivered}
+            onClick={() => setConfirming(true)}
+            disabled={!canDeliver || busy || delivered || confirming}
             className={`${btnBase} liquid-glass-strong text-petroleum hover:bg-white/50 disabled:active:scale-100 ${busy ? "cursor-wait" : ""} ${delivered ? "cursor-default" : ""}`}
           >
             {delivered ? (

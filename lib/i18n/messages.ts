@@ -107,6 +107,7 @@ export type Messages = {
     confidence: string;
     pick: string;
     correct: string;
+    deliveredAt: string;
   };
   guidance: {
     flags: Record<"canUse" | "canReuse" | "canRepair" | "canDonate" | "canRecycle", string>;
@@ -160,6 +161,10 @@ export type Messages = {
     deliveredBody: string;
     deliverError: string;
     deliverSignIn: string;
+    confirmTitle: string;
+    confirmBody: string;
+    confirmYes: string;
+    alreadyDelivered: string;
   };
   admin: {
     pointsMeta: string;
@@ -331,6 +336,7 @@ export const messages: Record<Locale, Messages> = {
       confidence: "Confianza",
       pick: "Elige la categoría",
       correct: "¿No es? Corrige la categoría",
+      deliveredAt: "Entregado en {name}",
     },
     guidance: {
       flags: {
@@ -407,6 +413,10 @@ export const messages: Record<Locale, Messages> = {
       deliveredBody: "Registramos tu entrega. Gracias por cerrar el ciclo.",
       deliverError: "No pudimos registrar la entrega. Intenta de nuevo.",
       deliverSignIn: "Entra con Google para registrar la entrega.",
+      confirmTitle: "¿Confirmas la entrega?",
+      confirmBody: "Vas a registrar tu {device} como entregado en {name}. No se puede deshacer.",
+      confirmYes: "Sí, entregar",
+      alreadyDelivered: "Ya entregaste este aparato en {name}.",
     },
     admin: {
       pointsMeta: "Administrar puntos - EcoPunto IA",
@@ -579,6 +589,7 @@ export const messages: Record<Locale, Messages> = {
       confidence: "Confidence",
       pick: "Pick the category",
       correct: "Not this? Correct the category",
+      deliveredAt: "Handed in at {name}",
     },
     guidance: {
       flags: {
@@ -655,6 +666,10 @@ export const messages: Record<Locale, Messages> = {
       deliveredBody: "We logged your hand-in. Thanks for closing the loop.",
       deliverError: "We couldn’t log the hand-in. Try again.",
       deliverSignIn: "Sign in with Google to log the hand-in.",
+      confirmTitle: "Confirm the hand-in?",
+      confirmBody: "You’re about to log your {device} as handed in at {name}. This can’t be undone.",
+      confirmYes: "Yes, hand it in",
+      alreadyDelivered: "You already handed this in at {name}.",
     },
     admin: {
       pointsMeta: "Manage points - EcoPunto IA",
