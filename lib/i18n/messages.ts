@@ -131,6 +131,9 @@ export type Messages = {
     available: string;
     unavailable: string;
     directions: string;
+    deliver: string;
+    delivering: string;
+    delivered: string;
   };
   report: {
     sendError: string;
@@ -153,6 +156,10 @@ export type Messages = {
     error: string;
     mapTitle: string;
     more: string;
+    deliveredTitle: string;
+    deliveredBody: string;
+    deliverError: string;
+    deliverSignIn: string;
   };
   admin: {
     pointsMeta: string;
@@ -366,6 +373,9 @@ export const messages: Record<Locale, Messages> = {
       available: "Disponible",
       unavailable: "No disponible",
       directions: "Cómo llegar",
+      deliver: "Entregar",
+      delivering: "Entregando…",
+      delivered: "Entregado",
     },
     report: {
       sendError: "No pudimos enviar el reporte.",
@@ -393,6 +403,10 @@ export const messages: Record<Locale, Messages> = {
       error: "No pudimos cargar el punto recomendado.",
       mapTitle: "Mapa de la zona de {name}",
       more: "Ver más puntos",
+      deliveredTitle: "¡Listo! Tu aparato quedó en {name}",
+      deliveredBody: "Registramos tu entrega. Gracias por cerrar el ciclo.",
+      deliverError: "No pudimos registrar la entrega. Intenta de nuevo.",
+      deliverSignIn: "Entra con Google para registrar la entrega.",
     },
     admin: {
       pointsMeta: "Administrar puntos - EcoPunto IA",
@@ -607,6 +621,9 @@ export const messages: Record<Locale, Messages> = {
       available: "Open",
       unavailable: "Unavailable",
       directions: "Directions",
+      deliver: "Hand in",
+      delivering: "Handing in…",
+      delivered: "Handed in",
     },
     report: {
       sendError: "We couldn’t send the report.",
@@ -634,6 +651,10 @@ export const messages: Record<Locale, Messages> = {
       error: "We couldn’t load the recommended point.",
       mapTitle: "Map of the area around {name}",
       more: "See more points",
+      deliveredTitle: "Done! Your device is at {name}",
+      deliveredBody: "We logged your hand-in. Thanks for closing the loop.",
+      deliverError: "We couldn’t log the hand-in. Try again.",
+      deliverSignIn: "Sign in with Google to log the hand-in.",
     },
     admin: {
       pointsMeta: "Manage points - EcoPunto IA",

@@ -4,18 +4,24 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
+  CheckCircle,
   Clock,
   MapPin,
+  Package,
+  SpinnerGap,
   Star,
   X,
 } from "@phosphor-icons/react";
 import type { WasteKind } from "@/lib/catalog/kinds";
-import { embedMapUrl, mapsUrl, type RankedPoint } from "@/lib/catalog/ranking";
+import { mapsUrl, type RankedPoint } from "@/lib/catalog/ranking";
+import { BOGOTA_CENTER, type LatLng } from "@/lib/geo/bogota";
 import { formatPointHours } from "@/lib/i18n/hours";
+import { DeliveryMap } from "./delivery-map";
 import { useLocale, useMessages } from "./locale-provider";
 
 type Props = {
   kind: WasteKind;
+  path?: string | null;
   open: boolean;
   onClose: () => void;
 };
@@ -23,7 +29,15 @@ type Props = {
 type FetchState =
   | { status: "loading" }
   | { status: "error" }
-  | { status: "ready"; originLabel: string; point: RankedPoint };
+  | { status: "ready"; originLabel: string; origin: LatLng; point: RankedPoint };
+
+type Delivery = {
+  walking: boolean;
+  arrived: boolean;
+  post: "idle" | "pending" | "ok" | "error" | "unauth";
+};
+
+const NO_DELIVERY: Delivery = { walking: false, arrived: false, post: "idle" };
 
 const btnBase =
   "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition duration-100 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100";
@@ -38,9 +52,10 @@ function nearLabel(
   return copy.nearNamed.replace("{name}", originLabel);
 }
 
-export function RecommendedPointModal({ kind, open, onClose }: Props) {
+export function RecommendedPointModal({ kind, path = null, open, onClose }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [state, setState] = useState<FetchState>({ status: "loading" });
+  const [delivery, setDelivery] = useState<Delivery>(NO_DELIVERY);
   const t = useMessages();
   const locale = useLocale();
   const kmFormat = new Intl.NumberFormat(locale === "en" ? "en-US" : "es-CO", {
@@ -71,6 +86,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
         const res = await fetch(`/api/points?${params.toString()}`);
         const data = (await res.json()) as {
           originLabel?: string;
+          origin?: LatLng;
           recommended?: RankedPoint | null;
         };
         if (cancelled || (!isGps && usedGps)) return;
@@ -82,6 +98,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
         setState({
           status: "ready",
           originLabel: data.originLabel ?? (locale === "en" ? "Bogotá center" : "centro de Bogotá"),
+          origin: data.origin ?? BOGOTA_CENTER,
           point: data.recommended,
         });
       } catch {
@@ -90,6 +107,7 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
     }
 
     setState({ status: "loading" });
+    setDelivery(NO_DELIVERY);
     void load();
 
     if ("geolocation" in navigator) {
@@ -108,6 +126,32 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
       cancelled = true;
     };
   }, [open, kind, locale]);
+
+  async function deliver(point: RankedPoint) {
+    // A retry after arriving only re-sends; the walk already played.
+    setDelivery((d) => ({ walking: true, arrived: d.arrived, post: "pending" }));
+    try {
+      const res = await fetch("/api/deliveries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pointId: point.id,
+          pointName: point.name,
+          kind,
+          path,
+          km: Math.round(point.km * 100) / 100,
+        }),
+      });
+      const post = res.ok ? "ok" : res.status === 401 ? "unauth" : "error";
+      setDelivery((d) => ({ ...d, post }));
+    } catch {
+      setDelivery((d) => ({ ...d, post: "error" }));
+    }
+  }
+
+  const failed = delivery.post === "error" || delivery.post === "unauth";
+  const delivered = delivery.arrived && delivery.post === "ok";
+  const busy = delivery.walking && !delivered && !(delivery.arrived && failed);
 
   function onBackdropClick(event: React.MouseEvent<HTMLDialogElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -172,11 +216,13 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
 
       {state.status === "ready" && (
         <>
-          <iframe
+          <DeliveryMap
             title={t.recommended.mapTitle.replace("{name}", state.point.name)}
-            src={embedMapUrl(state.point)}
-            loading="lazy"
-            className="mt-5 h-60 w-full rounded-2xl border-0 bg-petroleum/5"
+            origin={state.origin}
+            point={state.point}
+            playing={delivery.walking}
+            delivered={delivered}
+            onArrive={() => setDelivery((d) => ({ ...d, arrived: true }))}
           />
           <div className="mt-4 flex items-start justify-between gap-3">
             <h3 className="text-base font-semibold leading-snug text-petroleum">
@@ -205,6 +251,31 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
               {formatPointHours(state.point.hours, locale)}
             </li>
           </ul>
+          {delivered && (
+            <div
+              role="status"
+              className="liquid-glass mt-4 flex items-start gap-3 rounded-2xl p-4"
+            >
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-pine-600 text-white">
+                <Package size={18} weight="fill" />
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-petroleum">
+                  {t.recommended.deliveredTitle.replace("{name}", state.point.name)}
+                </p>
+                <p className="mt-0.5 text-sm text-petroleum/70">
+                  {t.recommended.deliveredBody}
+                </p>
+              </div>
+            </div>
+          )}
+          {delivery.arrived && failed && (
+            <p role="status" className="mt-4 text-sm text-danger">
+              {delivery.post === "unauth"
+                ? t.recommended.deliverSignIn
+                : t.recommended.deliverError}
+            </p>
+          )}
         </>
       )}
 
@@ -219,6 +290,27 @@ export function RecommendedPointModal({ kind, open, onClose }: Props) {
             {t.point.directions}
             <ArrowUpRight size={14} weight="bold" />
           </a>
+        )}
+        {state.status === "ready" && (
+          <button
+            type="button"
+            onClick={() => void deliver(state.point)}
+            disabled={busy || delivered}
+            className={`${btnBase} liquid-glass-strong text-petroleum hover:bg-white/50 disabled:active:scale-100 ${busy ? "cursor-wait" : ""} ${delivered ? "cursor-default" : ""}`}
+          >
+            {delivered ? (
+              <CheckCircle size={14} weight="fill" className="text-pine-600" />
+            ) : busy ? (
+              <SpinnerGap size={14} weight="bold" className="animate-spin motion-reduce:animate-none" />
+            ) : (
+              <Package size={14} weight="bold" />
+            )}
+            {delivered
+              ? t.point.delivered
+              : busy
+                ? t.point.delivering
+                : t.point.deliver}
+          </button>
         )}
         <Link
           href={`/app/puntos?kind=${kind}`}

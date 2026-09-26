@@ -144,6 +144,7 @@ export function Result({ kind, confidence, path, answers = {} }: Props) {
       {!mustPick && (
         <RecommendedPointModal
           kind={valid}
+          path={path}
           open={mapOpen}
           onClose={() => setMapOpen(false)}
         />
