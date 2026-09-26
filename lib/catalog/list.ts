@@ -1,6 +1,11 @@
 import { isWasteKind, type WasteKind } from "@/lib/catalog/kinds";
 import { rankPoints, type CollectionPoint, type RankedPoint } from "@/lib/catalog/ranking";
-import { BOGOTA_CENTER, geocodeLocality, isInBogota } from "@/lib/geo/bogota";
+import {
+  BOGOTA_CENTER,
+  geocodeLocality,
+  isInBogota,
+  type LatLng,
+} from "@/lib/geo/bogota";
 import type { Locale } from "@/lib/i18n/locale";
 
 export type PointsOrigin =
@@ -10,6 +15,7 @@ export type PointsOrigin =
 
 export type PointsList = {
   originLabel: string;
+  origin: LatLng;
   points: RankedPoint[];
 };
 
@@ -45,6 +51,7 @@ export function listPoints(
     }
     return {
       originLabel: en ? "your location" : "tu ubicación",
+      origin: { lat: origin.lat, lng: origin.lng },
       points: rankPoints(catalog, kind, origin),
     };
   }
@@ -55,11 +62,13 @@ export function listPoints(
     }
     return {
       originLabel: hit.name,
+      origin: { lat: hit.lat, lng: hit.lng },
       points: rankPoints(catalog, kind, hit),
     };
   }
   return {
     originLabel: en ? "Bogotá center" : "centro de Bogotá",
+    origin: BOGOTA_CENTER,
     points: rankPoints(catalog, kind, BOGOTA_CENTER),
   };
 }

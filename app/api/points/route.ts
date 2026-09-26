@@ -22,6 +22,7 @@ export async function GET(request: Request) {
   return NextResponse.json({
     kind,
     originLabel: listed.originLabel,
+    origin: listed.origin,
     recommended: listed.points.find((p) => p.recommended) ?? null,
     points: listed.points,
   });
