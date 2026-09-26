@@ -1,10 +1,10 @@
-const POSES = {
+export const MASCOT_POSES = {
   map: "/images/mascot-map.png",
   guide: "/images/mascot-guide.png",
   idle: "/images/mascot-idle.png",
 } as const;
 
-export type MascotPose = keyof typeof POSES;
+export type MascotPose = keyof typeof MASCOT_POSES;
 export type MascotSize = "hero" | "companion";
 
 const SIZES: Record<MascotSize, string> = {
@@ -23,7 +23,7 @@ export function Mascot({
 }) {
   return (
     <img
-      src={POSES[pose]}
+      src={MASCOT_POSES[pose]}
       alt=""
       aria-hidden="true"
       decoding="async"
