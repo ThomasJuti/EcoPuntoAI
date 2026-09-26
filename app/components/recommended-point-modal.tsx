@@ -44,8 +44,10 @@ type Delivery = {
 
 const NO_DELIVERY: Delivery = { walking: false, arrived: false, post: "idle" };
 
-const btnBase =
-  "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition duration-100 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100";
+const btnShape =
+  "inline-flex items-center justify-center gap-2 rounded-full text-sm font-medium transition duration-100 ease-[var(--ease-out)] active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100";
+const btnBase = `${btnShape} px-5 py-2.5`;
+const btnSmall = `${btnShape} px-4 py-2`;
 
 function nearLabel(
   originLabel: string,
@@ -170,6 +172,7 @@ export function RecommendedPointModal({
   const delivered = justDelivered || handedIn;
   const busy = delivery.walking && !justDelivered && !(delivery.arrived && failed);
   const canDeliver = Boolean(path) && !handedIn;
+  const showConfirm = confirming && canDeliver && !busy && !justDelivered;
 
   const readyName = state.status === "ready" ? state.point.name : null;
   const onDeliveredRef = useRef(onDelivered);
@@ -312,48 +315,49 @@ export function RecommendedPointModal({
                 : t.recommended.deliverError}
             </p>
           )}
-          {confirming && canDeliver && !busy && !justDelivered && (
-            <div
-              role="alertdialog"
-              aria-labelledby="deliver-confirm-title"
-              aria-describedby="deliver-confirm-body"
-              className="liquid-glass mt-4 rounded-2xl p-4"
-            >
-              <p id="deliver-confirm-title" className="text-sm font-semibold text-petroleum">
-                {t.recommended.confirmTitle}
-              </p>
-              <p id="deliver-confirm-body" className="mt-1 text-sm leading-relaxed text-petroleum/70">
-                {t.recommended.confirmBody
-                  .replace("{device}", labelFor(kind, locale).toLowerCase())
-                  .replace("{name}", state.point.name)}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  autoFocus
-                  onClick={() => {
-                    setConfirming(false);
-                    void deliver(state.point);
-                  }}
-                  className={`${btnBase} bg-pine-600 text-white hover:bg-pine-600/90`}
-                >
-                  <Package size={14} weight="bold" />
-                  {t.recommended.confirmYes}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setConfirming(false)}
-                  className={`${btnBase} liquid-glass-strong text-petroleum hover:bg-white/50`}
-                >
-                  {t.common.cancel}
-                </button>
-              </div>
-            </div>
-          )}
         </>
       )}
 
-      <div className="mt-6 flex flex-wrap items-center gap-3">
+      {state.status === "ready" && showConfirm && (
+        <div
+          role="alertdialog"
+          aria-labelledby="deliver-confirm-title"
+          aria-describedby="deliver-confirm-body"
+          className="mt-5 border-t border-petroleum/10 pt-4"
+        >
+          <p id="deliver-confirm-title" className="text-sm font-semibold text-petroleum">
+            {t.recommended.confirmTitle}
+          </p>
+          <p id="deliver-confirm-body" className="mt-0.5 text-xs leading-relaxed text-petroleum/65">
+            {t.recommended.confirmBody
+              .replace("{device}", labelFor(kind, locale).toLowerCase())
+              .replace("{name}", state.point.name)}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              autoFocus
+              onClick={() => {
+                setConfirming(false);
+                void deliver(state.point);
+              }}
+              className={`${btnSmall} bg-pine-600 text-white hover:bg-pine-600/90`}
+            >
+              <Package size={14} weight="bold" />
+              {t.recommended.confirmYes}
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirming(false)}
+              className={`${btnSmall} liquid-glass-strong text-petroleum hover:bg-white/50`}
+            >
+              {t.common.cancel}
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className={`mt-6 flex-wrap items-center gap-3 ${showConfirm ? "hidden" : "flex"}`}>
         {state.status === "ready" && (
           <a
             href={mapsUrl(state.point)}
@@ -369,7 +373,7 @@ export function RecommendedPointModal({
           <button
             type="button"
             onClick={() => setConfirming(true)}
-            disabled={!canDeliver || busy || delivered || confirming}
+            disabled={!canDeliver || busy || delivered}
             className={`${btnBase} liquid-glass-strong text-petroleum hover:bg-white/50 disabled:active:scale-100 ${busy ? "cursor-wait" : ""} ${delivered ? "cursor-default" : ""}`}
           >
             {delivered ? (

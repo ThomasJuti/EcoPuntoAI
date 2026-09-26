@@ -148,6 +148,9 @@
 
 /* Modal nativo (dialog): entrada opacity + scale, backdrop atenuado */
 .modal-map {
+  /* Beats liquid-glass's overflow: hidden so tall content scrolls instead of clipping */
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
   opacity: 0;
   transform: scale(0.96);
   transition:
