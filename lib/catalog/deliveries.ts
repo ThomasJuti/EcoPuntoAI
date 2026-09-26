@@ -5,7 +5,7 @@ export type DeliveryInput = {
   pointId: string;
   pointName: string;
   kind: WasteKind;
-  path: string | null;
+  path: string;
   km: number | null;
 };
 
@@ -24,12 +24,14 @@ export function parseDeliveryInput(body: unknown): DeliveryInput {
       ? row.km
       : null;
   if (!pointId) throw new Error("Falta el punto");
+  // The path ties the hand-in to one identification; the unique index needs it.
+  if (!path) throw new Error("Falta la identificación");
   if (!isWasteKind(kindRaw)) throw new Error("Tipo inválido");
   return {
     pointId,
     pointName: pointName || pointId,
     kind: kindRaw,
-    path: path || null,
+    path,
     km,
   };
 }

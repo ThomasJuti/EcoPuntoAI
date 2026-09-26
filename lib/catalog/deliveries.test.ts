@@ -15,14 +15,14 @@ test("parses a hand-in with path and distance", () => {
   assert.equal(parsed.km, 2.7);
 });
 
-test("defaults name, path and km", () => {
-  const parsed = parseDeliveryInput({ pointId: "x", kind: "cables", km: -1 });
+test("defaults name and km", () => {
+  const parsed = parseDeliveryInput({ pointId: "x", kind: "cables", path: "p", km: -1 });
   assert.equal(parsed.pointName, "x");
-  assert.equal(parsed.path, null);
   assert.equal(parsed.km, null);
 });
 
-test("rejects unknown kind and missing point", () => {
-  assert.throws(() => parseDeliveryInput({ pointId: "x", kind: "spam" }));
-  assert.throws(() => parseDeliveryInput({ kind: "phones" }));
+test("rejects unknown kind, missing point and missing identification", () => {
+  assert.throws(() => parseDeliveryInput({ pointId: "x", kind: "spam", path: "p" }));
+  assert.throws(() => parseDeliveryInput({ kind: "phones", path: "p" }));
+  assert.throws(() => parseDeliveryInput({ pointId: "x", kind: "phones" }));
 });
