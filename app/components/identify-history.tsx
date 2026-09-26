@@ -3,6 +3,7 @@ import {
   ArrowRight,
   BatteryFull,
   BatteryMedium,
+  CheckCircle,
   CookingPot,
   Desktop,
   DeviceMobile,
@@ -17,6 +18,7 @@ import {
   Usb,
 } from "@phosphor-icons/react/dist/ssr";
 import { formatAnsweredConditions } from "@/lib/catalog/conditions";
+import { deliveredPaths } from "@/lib/catalog/deliveries";
 import { labelFor } from "@/lib/catalog/kinds";
 import {
   listIdentifications,
@@ -101,7 +103,8 @@ export async function IdentifyHistory() {
     );
   }
 
-  const records = await listIdentifications(await createClient());
+  const supabase = await createClient();
+  const records = await listIdentifications(supabase);
   if (records.length === 0) {
     return (
       <EmptyCard
@@ -111,6 +114,11 @@ export async function IdentifyHistory() {
     );
   }
 
+  const delivered = await deliveredPaths(
+    supabase,
+    records.map((record) => record.path),
+  );
+
   return (
     <ul className="space-y-3">
       {records.map((record) => {
@@ -119,6 +127,7 @@ export async function IdentifyHistory() {
         const pct =
           record.kind !== "unknown" ? confidencePct(record.confidence) : null;
         const answered = formatAnsweredConditions(record.answers, locale);
+        const deliveredAt = delivered.get(record.path);
         return (
           <li key={record.path}>
             <Link
@@ -129,8 +138,19 @@ export async function IdentifyHistory() {
                 <KindIcon size={22} weight="regular" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-base font-medium text-petroleum">
-                  {labelFor(record.kind, locale)}
+                <span className="flex items-center gap-2">
+                  <span className="truncate text-base font-medium text-petroleum">
+                    {labelFor(record.kind, locale)}
+                  </span>
+                  {deliveredAt !== undefined && (
+                    <span
+                      title={deliveredAt || undefined}
+                      className="inline-flex shrink-0 items-center gap-1 rounded-full bg-pine-600/12 px-2.5 py-0.5 text-xs font-medium text-pine-950"
+                    >
+                      <CheckCircle size={12} weight="fill" className="text-pine-600" />
+                      {messages[locale].point.delivered}
+                    </span>
+                  )}
                 </span>
                 <span className="mt-0.5 block text-sm text-petroleum/55">
                   {when}

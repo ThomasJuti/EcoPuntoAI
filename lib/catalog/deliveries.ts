@@ -1,3 +1,4 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { isWasteKind, type WasteKind } from "@/lib/catalog/kinds";
 
 export type DeliveryInput = {
@@ -31,4 +32,24 @@ export function parseDeliveryInput(body: unknown): DeliveryInput {
     path: path || null,
     km,
   };
+}
+
+/** Paths of the given identifications already handed in, mapped to the point name. */
+export async function deliveredPaths(
+  supabase: SupabaseClient,
+  paths: string[],
+): Promise<Map<string, string>> {
+  const out = new Map<string, string>();
+  if (paths.length === 0) return out;
+  const { data, error } = await supabase
+    .from("deliveries")
+    .select("storage_path, point_name")
+    .in("storage_path", paths);
+  if (error) return out;
+  for (const row of data ?? []) {
+    if (typeof row.storage_path === "string") {
+      out.set(row.storage_path, String(row.point_name ?? ""));
+    }
+  }
+  return out;
 }
